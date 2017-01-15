@@ -1,6 +1,7 @@
 package com.cameronvoell.listo.activities;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.View;
 
 import com.cameronvoell.listo.adapters.BaseTabAdapter;
 import com.cameronvoell.listo.R;
+import com.cameronvoell.listo.fragments.ManualWordCaptureFragment;
+import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 
 public class HomeActivity extends AppCompatActivity {
@@ -42,5 +45,33 @@ public class HomeActivity extends AppCompatActivity {
 
 	public void captureWord(View v) {
 		startActivity(new Intent(getApplicationContext(), CaptureWordActivity.class));
+	}
+
+	public void sort(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 1 && page != null) {
+			((VocabWordListFragment)page).sort();
+		}
+	}
+
+	public void filter(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 1 && page != null) {
+			((VocabWordListFragment)page).filter();
+		}
+	}
+
+	public void custom(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 1 && page != null) {
+			((VocabWordListFragment)page).custom();
+		}
+	}
+
+	public void search(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 1 && page != null) {
+			((VocabWordListFragment)page).search();
+		}
 	}
 }

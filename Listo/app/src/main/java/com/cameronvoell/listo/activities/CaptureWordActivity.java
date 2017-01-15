@@ -3,6 +3,7 @@ package com.cameronvoell.listo.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.adapters.CaptureWordTabAdapter;
+import com.cameronvoell.listo.fragments.ManualWordCaptureFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 
 /**
@@ -62,5 +64,16 @@ public class CaptureWordActivity extends AppCompatActivity {
 	}
 
 	public void captureWord(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 0 && page != null) {
+			((ManualWordCaptureFragment)page).captureWord();
+		}
+	}
+
+	public void autofill(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 0 && page != null) {
+			((ManualWordCaptureFragment)page).autoFill();
+		}
 	}
 }
