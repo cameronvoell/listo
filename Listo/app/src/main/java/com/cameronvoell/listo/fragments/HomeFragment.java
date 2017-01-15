@@ -21,7 +21,7 @@ public class HomeFragment extends Fragment {
     private TextView mNumberWordsSavedView;
     private TextView mNumberScheduledView;
 
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
         return fragment;
     }

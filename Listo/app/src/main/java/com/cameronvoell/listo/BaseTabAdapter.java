@@ -37,8 +37,8 @@ public class BaseTabAdapter extends FragmentPagerAdapter implements SlidingTabLa
 
 	@Override
 	public Fragment getItem(int position) {
-		if (position == 0) return HomeFragment.newInstance("", "");
-		else return VocabWordListFragment.newInstance("", "");
+		if (position == 0) return HomeFragment.newInstance();
+		else return VocabWordListFragment.newInstance();
 	}
 
 	@Override
