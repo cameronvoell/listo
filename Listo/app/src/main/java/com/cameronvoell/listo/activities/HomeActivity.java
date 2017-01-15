@@ -9,7 +9,6 @@ import android.view.View;
 
 import com.cameronvoell.listo.adapters.BaseTabAdapter;
 import com.cameronvoell.listo.R;
-import com.cameronvoell.listo.fragments.ManualWordCaptureFragment;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 

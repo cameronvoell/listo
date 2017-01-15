@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.fragments.HomeFragment;
 import com.cameronvoell.listo.fragments.ManualWordCaptureFragment;
+import com.cameronvoell.listo.fragments.SuggestedWordCaptureFragment;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 
@@ -26,10 +27,6 @@ public class CaptureWordTabAdapter extends FragmentPagerAdapter implements Slidi
 		super(activity.getSupportFragmentManager());
 	}
 
-	public CaptureWordTabAdapter(FragmentManager fm) {
-		super(fm);
-	}
-
 	@Override
 	public void registerDataSetObserver(DataSetObserver observer) {
 		super.registerDataSetObserver(observer);
@@ -38,7 +35,7 @@ public class CaptureWordTabAdapter extends FragmentPagerAdapter implements Slidi
 	@Override
 	public Fragment getItem(int position) {
 		if (position == 0) return ManualWordCaptureFragment.newInstance();
-		else return VocabWordListFragment.newInstance();
+		else return SuggestedWordCaptureFragment.newInstance();
 	}
 
 	@Override

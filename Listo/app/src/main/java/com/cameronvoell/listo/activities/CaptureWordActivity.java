@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.adapters.CaptureWordTabAdapter;
 import com.cameronvoell.listo.fragments.ManualWordCaptureFragment;
+import com.cameronvoell.listo.fragments.SuggestedWordCaptureFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 
 /**
@@ -45,6 +46,29 @@ public class CaptureWordActivity extends AppCompatActivity {
 			}
 		});
 		slidingTabLayout.setViewPager(mViewPager);
+
+		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				if (position == 1) {
+					View view = CaptureWordActivity.this.getCurrentFocus();
+					if (view != null) {
+						InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+						imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+					}
+				}
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
 	}
 
 	public void close(View v) {
@@ -67,6 +91,13 @@ public class CaptureWordActivity extends AppCompatActivity {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
 		if (mViewPager.getCurrentItem() == 0 && page != null) {
 			((ManualWordCaptureFragment)page).captureWord();
+			View v = this.getCurrentFocus();
+			if (v != null) {
+				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+			}
+		} else if (mViewPager.getCurrentItem() == 1 && page != null) {
+			((SuggestedWordCaptureFragment)page).captureWords();
 		}
 	}
 
@@ -74,6 +105,13 @@ public class CaptureWordActivity extends AppCompatActivity {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
 		if (mViewPager.getCurrentItem() == 0 && page != null) {
 			((ManualWordCaptureFragment)page).autoFill();
+		}
+	}
+
+	public void clear(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 1 && page != null) {
+			((SuggestedWordCaptureFragment)page).clear();
 		}
 	}
 }

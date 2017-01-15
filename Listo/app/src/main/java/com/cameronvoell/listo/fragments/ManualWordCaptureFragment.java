@@ -14,8 +14,6 @@ import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.database.DatabaseHelper;
 import com.cameronvoell.listo.model.FrequencyWord;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by cameronvoell on 1/15/17.
  */
@@ -80,8 +78,11 @@ public class ManualWordCaptureFragment extends Fragment {
 			freq = Integer.parseInt(freqString);
 		}
 		mDbHelper.saveVocabWord(spanishWord, englishDef, wordType, freq);
+		mSpanishWordEntry.setText("");
+		mEnglishDefinitionEntry.setText("");
+		mWordTypeTextView.setText("");
+		mFrequencyTextView.setText("");
 		Toast.makeText(getContext(), spanishWord + " saved!", Toast.LENGTH_SHORT).show();
-		getActivity().finish();
 	}
 
 	public void autoFill() {
