@@ -1,7 +1,5 @@
 package com.cameronvoell.listo.fragments;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -23,6 +21,7 @@ import com.cameronvoell.listo.database.DatabaseHelper;
  */
 public class VocabWordListFragment extends ListFragment {
 
+    boolean mSorted = false;
 
     public static VocabWordListFragment newInstance() {
         VocabWordListFragment fragment = new VocabWordListFragment();
@@ -76,24 +75,15 @@ public class VocabWordListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-
-        //Intent intent = new Intent(getContext(), CardCreatorActivity.class);
-        //intent.putExtra("position", position);
-//        intent.putExtra("sortOption", mSortOption);
-//        intent.putExtra("filterOption", mFilterOption);
-
-       // startActivity(intent);
-
-
-
-//        if (null != mListener) {
-//            // Notify the active callbacks interface (the activity, if the
-//            // fragment is attached to one) that an item has been selected.
-//            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-//        }
     }
 
     public void sort() {
+        if (mSorted) {
+            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor()));
+        } else {
+            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursorSortedByFrequency()));
+        }
+        mSorted = !mSorted;
     }
 
     public void filter() {
@@ -116,7 +106,6 @@ public class VocabWordListFragment extends ListFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(String id);
     }
 

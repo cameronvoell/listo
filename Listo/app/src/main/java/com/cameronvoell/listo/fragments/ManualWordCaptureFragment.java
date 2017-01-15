@@ -80,7 +80,7 @@ public class ManualWordCaptureFragment extends Fragment {
 			freq = Integer.parseInt(freqString);
 		}
 		mDbHelper.saveVocabWord(spanishWord, englishDef, wordType, freq);
-		Toast.makeText(getContext(), mWord.getmWord() + " saved!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(getContext(), spanishWord + " saved!", Toast.LENGTH_SHORT).show();
 		getActivity().finish();
 	}
 

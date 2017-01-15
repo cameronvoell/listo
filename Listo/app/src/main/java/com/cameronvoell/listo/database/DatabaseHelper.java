@@ -221,6 +221,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return c;
 	}
 
+	public Cursor getSavedWordsCursorSortedByFrequency() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SAVED_WORDS + " ORDER BY " + KEY_FREQ_RANK + " ASC", null);
+		return c;
+	}
+
 	public boolean contains(String word) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		String where = " WHERE " + KEY_SPANISH_WORD + "==\"" + word + "\"";

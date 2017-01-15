@@ -23,7 +23,7 @@ public class SavedWordCursorAdapter extends CursorAdapter {
 	 *
 	 * @param context The context
 	 * @param c       The cursor from which to get the data.
-	 * @deprecated This option is discouraged, as it results in Cursor queries
+	 * This option is discouraged, as it results in Cursor queries
 	 * being performed on the application's UI thread and thus can cause poor
 	 * responsiveness or even Application Not Responding errors.  As an alternative,
 	 * use {@link LoaderManager} with a {@link CursorLoader}.
