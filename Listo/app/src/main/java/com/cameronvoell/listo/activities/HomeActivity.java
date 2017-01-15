@@ -1,9 +1,13 @@
-package com.cameronvoell.listo;
+package com.cameronvoell.listo.activities;
 
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
+import com.cameronvoell.listo.adapters.BaseTabAdapter;
+import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 
 public class HomeActivity extends AppCompatActivity {
@@ -34,7 +38,9 @@ public class HomeActivity extends AppCompatActivity {
 			}
 		});
 		slidingTabLayout.setViewPager(mViewPager);
+	}
 
-
+	public void captureWord(View v) {
+		startActivity(new Intent(getApplicationContext(), CaptureWordActivity.class));
 	}
 }

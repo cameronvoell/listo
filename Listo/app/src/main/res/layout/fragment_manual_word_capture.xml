@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/spanish_word_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Spanish word"
+        android:layout_below="@id/close_btn"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp"/>
+
+    <EditText
+        android:id="@+id/eng_def_entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="English definition"
+        android:layout_below="@id/spanish_word_entry"
+        android:layout_marginTop="16dp"
+        android:textSize="24sp"/>
+
+    <Button
+        android:id="@+id/autofill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="autofill"
+        android:layout_below="@id/eng_def_entry"
+        android:onClick="autofill"/>
+
+    <LinearLayout
+        android:id="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/eng_def_entry"
+        android:layout_toRightOf="@id/autofill"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/word_type"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/frequency"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

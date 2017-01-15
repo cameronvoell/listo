@@ -1,4 +1,4 @@
-package com.cameronvoell.listo;
+package com.cameronvoell.listo.adapters;
 
 import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
@@ -6,27 +6,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 
+import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.fragments.HomeFragment;
+import com.cameronvoell.listo.fragments.ManualWordCaptureFragment;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 
 /**
  * Created by cameronvoell on 1/15/17.
  */
-public class BaseTabAdapter extends FragmentPagerAdapter implements SlidingTabLayout.TabIconProvider {
+public class CaptureWordTabAdapter extends FragmentPagerAdapter implements SlidingTabLayout.TabIconProvider {
 
-	private static final int iconRes[] = {
-			R.drawable.ic_action_eye_open,
-			R.drawable.ic_list,
-			R.drawable.ic_keyboard_arrow_down,
-			R.drawable.ic_photo
+	private static final String iconTxt[] = {
+			"manual",
+			"suggested"
 	};
 
-	public BaseTabAdapter(AppCompatActivity activity) {
+	public CaptureWordTabAdapter(AppCompatActivity activity) {
 		super(activity.getSupportFragmentManager());
 	}
 
-	public BaseTabAdapter(FragmentManager fm) {
+	public CaptureWordTabAdapter(FragmentManager fm) {
 		super(fm);
 	}
 
@@ -37,17 +37,22 @@ public class BaseTabAdapter extends FragmentPagerAdapter implements SlidingTabLa
 
 	@Override
 	public Fragment getItem(int position) {
-		if (position == 0) return HomeFragment.newInstance();
+		if (position == 0) return ManualWordCaptureFragment.newInstance();
 		else return VocabWordListFragment.newInstance();
 	}
 
 	@Override
 	public int getCount() {
-		return iconRes.length;
+		return iconTxt.length;
+	}
+
+	@Override
+	public CharSequence getPageTitle(int position) {
+		return iconTxt[position];
 	}
 
 	@Override
 	public int getPageIconResId(int position) {
-		return iconRes[position];
+		return 0;
 	}
 }
