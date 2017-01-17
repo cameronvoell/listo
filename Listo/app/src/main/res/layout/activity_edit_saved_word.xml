@@ -1,0 +1,230 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="16dp"
+        android:textStyle="bold"
+        android:textSize="32dp"/>
+
+    <Button
+        android:id="@+id/wordType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/title"
+        android:text="n - m"
+        android:textAllCaps="false"
+        android:textSize="16dp"
+        android:onClick="updateType"/>
+
+    <LinearLayout
+        android:id="@+id/espanol_layout"
+        android:layout_marginLeft="24dp"
+        android:layout_below="@id/wordType"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="gravity"
+            android:gravity="bottom"
+            android:text="Español: "
+            android:layout_weight=".25"/>
+
+        <EditText
+            android:id="@+id/spanish_word"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".15"
+            android:text="search"
+            android:onClick="searchFreqDataEdit"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/english_layout"
+        android:layout_marginLeft="24dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/espanol_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Ingles: "
+            android:layout_weight=".25"/>
+
+        <EditText
+            android:id="@+id/english_definition"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".75"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ejemplo_layout"
+        android:layout_marginLeft="24dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/english_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Ejemplo: "
+            android:layout_weight=".25"/>
+
+        <EditText
+            android:id="@+id/spanish_example"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".75"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hint_layout"
+        android:layout_marginLeft="24dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/ejemplo_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Hint: "
+            android:layout_weight=".25"/>
+
+        <EditText
+            android:id="@+id/hint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".75"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/added_date_layout"
+        android:layout_marginLeft="24dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/hint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Added Date: "
+            android:layout_weight=".25"/>
+
+        <TextView
+            android:id="@+id/added_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight=".75"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/frequency_layout"
+        android:layout_marginLeft="24dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/added_date_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Frequency Rank: "
+            android:layout_weight=".25"/>
+
+        <TextView
+            android:id="@+id/freq_rank"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight=".75"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/memorized_layout"
+        android:layout_marginLeft="24dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/frequency_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Memorized?: "
+            android:layout_weight=".25"/>
+
+        <TextView
+            android:id="@+id/memorized"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight=".75"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/save"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="delete"
+            android:onClick="delete"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="memorized"
+            android:onClick="memorized"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@id/save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:onClick="saveEdit"
+        android:text="save"/>
+
+</RelativeLayout>

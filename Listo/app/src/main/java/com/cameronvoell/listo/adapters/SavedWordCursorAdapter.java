@@ -61,22 +61,18 @@ public class SavedWordCursorAdapter extends CursorAdapter {
 		TextView spanishTextView = (TextView) view.findViewById(R.id.spanish_word);
 		TextView englishDefTextView = (TextView)view.findViewById(R.id.english_def);
 		TextView wordTypeTextView = (TextView)view.findViewById(R.id.type);
-		CheckBox hasCardView = (CheckBox)view.findViewById(R.id.hasCard);
-		// Extract properties from cursor
+
 		int freqColumn = cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_FREQ);
 		int spanishWordColumn = cursor.getColumnIndexOrThrow(DatabaseHelper.KEY_SPANISH_WORD);
-		int hasCard = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.KEY_HAS_CARD));
 
-		if (hasCard > 1) hasCardView.setChecked(true);
-		else hasCardView.setChecked(false);
 
 		wordTypeTextView.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_TYPE)));
 		englishDefTextView.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.KEY_ENG_DEF)));
 
 
-
 		int freq = cursor.getInt(freqColumn);
 		String word = cursor.getString(spanishWordColumn);
+
 		// Populate fields with extracted properties
 		if (freq != 9999 && freq != -1)freqTextView.setText("" + freq);
 		else freqTextView.setText("");

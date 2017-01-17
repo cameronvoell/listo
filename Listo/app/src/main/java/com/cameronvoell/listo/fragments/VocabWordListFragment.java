@@ -1,5 +1,7 @@
 package com.cameronvoell.listo.fragments;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -7,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.cameronvoell.listo.R;
+import com.cameronvoell.listo.activities.EditSavedWordActivity;
 import com.cameronvoell.listo.adapters.SavedWordCursorAdapter;
 import com.cameronvoell.listo.database.DatabaseHelper;
+import com.cameronvoell.listo.model.SavedWord;
 
 /**
  * A fragment representing a list of Items.
@@ -21,7 +26,8 @@ import com.cameronvoell.listo.database.DatabaseHelper;
  */
 public class VocabWordListFragment extends ListFragment {
 
-    boolean mSorted = false;
+    private boolean mSorted = false;
+    private SavedWordCursorAdapter mAdapter;
 
     public static VocabWordListFragment newInstance() {
         VocabWordListFragment fragment = new VocabWordListFragment();
@@ -38,7 +44,8 @@ public class VocabWordListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor()));
+        mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor());
+        setListAdapter(mAdapter);
     }
 
     /**
@@ -65,9 +72,8 @@ public class VocabWordListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        CursorAdapter c = (CursorAdapter)getListAdapter();
-        c.notifyDataSetChanged();
-        setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor()));
+        mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor());
+        setListAdapter(mAdapter);
     }
 
 
@@ -75,14 +81,24 @@ public class VocabWordListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+        SavedWord word = new DatabaseHelper(getContext()).cursorToSavedWord((Cursor) mAdapter.getItem(position));
+        Toast.makeText(getContext(), word.getmWord(), Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getContext(), EditSavedWordActivity.class);
+        intent.putExtra(EditSavedWordActivity.SAVED_WORD, word);
+
+        startActivity(intent);
+
+
     }
 
     public void sort() {
         if (mSorted) {
-            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor()));
+            mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor());
         } else {
-            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursorSortedByFrequency()));
+            mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursorSortedByFrequency());
         }
+        setListAdapter(mAdapter);
         mSorted = !mSorted;
     }
 

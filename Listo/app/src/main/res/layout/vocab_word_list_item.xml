@@ -34,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@id/info"
-        android:layout_toLeftOf="@+id/hasCard"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp">
 
@@ -59,13 +58,13 @@
 
 
 
-    <CheckBox
+    <!--<CheckBox
         android:layout_alignParentRight="true"
         android:id="@id/hasCard"
         android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:focusable="false"/>
+        android:focusable="false"/>-->
 
 </RelativeLayout>

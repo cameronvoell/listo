@@ -20,6 +20,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        <activity android:name=".activities.EditSavedWordActivity"/>
     </application>
 
 </manifest>

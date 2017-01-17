@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	Context mContext;
 
 	//Used for upgrading the database
-	private static final int DATABASE_VERSION = 10;
+	private static final int DATABASE_VERSION = 11;
 
 	//name of our database file
 	private static final String DATABASE_NAME = "listo_database";
@@ -41,7 +41,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String KEY_FREQ_SPANISH_WORD = "freq_span_word";
 	public static final String KEY_FREQ_ENG_DEF = "freq_eng_def";
 	public static final String KEY_FREQ_TYPE = "freq_type";
+
 	public static final String TABLE_FREQUENCY = "frequency";
+
 	private static final String CREATE_FREQUENCY_TABLE = "CREATE TABLE " + TABLE_FREQUENCY
 			+ "(" + KEY_ID + " INTEGER PRIMARY KEY, "
 			+ KEY_FREQ_SPANISH_WORD + " TEXT, "
@@ -52,19 +54,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	//Saved words Database Helper Strings
 	public static final String KEY_SPANISH_WORD = "spanish_word";
 	public static final String KEY_ENG_DEF = "eng_def";
-	public static final String KEY_TYPE = "type";
-	public static final String KEY_ADDED_DATE = "added_date";
-	public static final String KEY_HAS_CARD = "has_card";
-	public static final String TABLE_SAVED_WORDS = "saved_words";
 	public static final String KEY_FREQ = "freq";
+	public static final String KEY_ADDED_DATE = "added_date";
+	public static final String KEY_TYPE = "type";
+	public static final String KEY_EXAMPLE = "example";
+	public static final String KEY_HINT = "hint";
+	public static final String KEY_MEMORIZED = "memory";
+	public static final String KEY_MEMORY_STRENGTH = "memory_strength";
+	public static final String KEY_LAST_REVIEWED_DATE = "last_reviewed_date";
+	public static final String KEY_NUM_TIMES_REVIEWED = "num_times_reviewed";
+	public static final String KEY_NUM_TIMES_INCORRECT = "num_times_incorrect";
+
+
+	public static final String TABLE_SAVED_WORDS = "saved_words";
 	private static final String CREATE_SAVED_WORDS_TABLE = "CREATE TABLE " + TABLE_SAVED_WORDS
-			+ "(" + KEY_ID + " INTEGER PRIMARY KEY, "
-			+ KEY_SPANISH_WORD + " TEXT, "
-			+ KEY_ENG_DEF + " TEXT, "
-			+ KEY_FREQ + " INTEGER, "
-			+ KEY_ADDED_DATE + " DATETIME, "
-			+ KEY_HAS_CARD + " INTEGER, "
-			+ KEY_TYPE + " TEXT" + ")";
+			+ "("
+				+ KEY_ID + " INTEGER PRIMARY KEY, "
+				+ KEY_SPANISH_WORD + " TEXT, "
+				+ KEY_ENG_DEF + " TEXT, "
+				+ KEY_FREQ + " INTEGER, "
+				+ KEY_ADDED_DATE + " DATETIME, "
+				+ KEY_TYPE + " TEXT, "
+				+ KEY_EXAMPLE + " TEXT, "
+				+ KEY_HINT + " TEXT, "
+				+ KEY_MEMORIZED + " INTEGER, "
+				+ KEY_MEMORY_STRENGTH + " INTEGER, "
+				+ KEY_LAST_REVIEWED_DATE + " DATETIME, "
+				+ KEY_NUM_TIMES_REVIEWED + " INTEGER, "
+				+ KEY_NUM_TIMES_INCORRECT + " INTEGER"
+			+ ")";
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -173,10 +191,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String spanishWord = c.getString(c.getColumnIndex(KEY_SPANISH_WORD));
 		String englishDef = c.getString(c.getColumnIndex(KEY_ENG_DEF));
 		int frequency = c.getInt(c.getColumnIndex(KEY_FREQ));
+		String date = c.getString(c.getColumnIndex(KEY_ADDED_DATE));
 		String type = c.getString(c.getColumnIndex(KEY_TYPE));
-		SavedWord word = new SavedWord(frequency, spanishWord, englishDef, type);
-		word.setmAddedDate(c.getString(c.getColumnIndex(KEY_ADDED_DATE)));
-		word.setmHasCard(1 == c.getInt(c.getColumnIndex(KEY_HAS_CARD)));
+		String example = c.getString(c.getColumnIndex(KEY_EXAMPLE));
+		String hint = c.getString(c.getColumnIndex(KEY_HINT));
+		boolean isMemorized = c.getInt(c.getColumnIndex(KEY_MEMORIZED)) == 1;
+		int memoryStrength = c.getInt(c.getColumnIndex(KEY_MEMORY_STRENGTH));
+		String lastReviewedDate = c.getString(c.getColumnIndex(KEY_LAST_REVIEWED_DATE));
+		int numTimesReviewed = c.getInt(c.getColumnIndex(KEY_NUM_TIMES_REVIEWED));
+		int numTimesIncorrect = c.getInt(c.getColumnIndex(KEY_NUM_TIMES_INCORRECT));
+
+
+		SavedWord word = new SavedWord(spanishWord, englishDef, frequency, date, type, example, hint,
+										isMemorized, memoryStrength, lastReviewedDate, numTimesReviewed,
+										numTimesIncorrect);
 		return word;
 	}
 
@@ -190,34 +218,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(KEY_SPANISH_WORD, spanishWord);
 		values.put(KEY_ENG_DEF, englishDef);
-		values.put(KEY_TYPE, wordType);
 		values.put(KEY_FREQ, freq);
 		values.put(KEY_ADDED_DATE, addedDate);
-		values.put(KEY_HAS_CARD, 0);
+		values.put(KEY_TYPE, wordType);
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.insert(TABLE_SAVED_WORDS, null, values);
 	}
 
-	public int getNumWordsSaved() {
+	public void deleteSavedWord(String spanishWord) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SAVED_WORDS, null);
-		int counter = 0;
-		while (c.moveToNext()) {
-			String s = c.getString(c.getColumnIndex(KEY_ADDED_DATE));
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-			Date date = new Date();
-			try {
-				Date added = dateFormat.parse(s);
-				if(date.getTime() - added.getTime() < 24 * 60 * 60 * 1000) counter++;
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			//counter++;
-		}
-		return counter;
+		db.delete(TABLE_SAVED_WORDS, KEY_SPANISH_WORD + "=\"" + spanishWord + "\"", null);
 	}
+
+//	public int getNumWordsSaved() {
+//		SQLiteDatabase db = this.getWritableDatabase();
+//		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SAVED_WORDS, null);
+//		int counter = 0;
+//		while (c.moveToNext()) {
+//			String s = c.getString(c.getColumnIndex(KEY_ADDED_DATE));
+//			SimpleDateFormat dateFormat = new SimpleDateFormat(
+//					"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+//			Date date = new Date();
+//			try {
+//				Date added = dateFormat.parse(s);
+//				if(date.getTime() - added.getTime() < 24 * 60 * 60 * 1000) counter++;
+//			} catch (ParseException e) {
+//				e.printStackTrace();
+//			}
+//			//counter++;
+//		}
+//		return counter;
+//	}
 
 	public Cursor getSavedWordsCursor() {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -242,17 +274,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return counter > 0;
 	}
 
-	public SavedWord getSavedWord(int position) {
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SAVED_WORDS + " ORDER BY " + KEY_ADDED_DATE + " DESC", null);
-		int counter = 0;
-		while (c.moveToNext()) {
-			if (counter++ == position) {
-				return cursorToSavedWord(c);
-			}
-		}
-		return null;
-	}
+//	public SavedWord getSavedWord(int position) {
+//		SQLiteDatabase db = this.getWritableDatabase();
+//		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SAVED_WORDS + " ORDER BY " + KEY_ADDED_DATE + " DESC", null);
+//		int counter = 0;
+//		while (c.moveToNext()) {
+//			if (counter++ == position) {
+//				return cursorToSavedWord(c);
+//			}
+//		}
+//		return null;
+//	}
 
 	public FrequencyWord searchForWordWithEnglishDef(String englishWord) {
 		if (TextUtils.isEmpty(englishWord)) return null;
@@ -309,7 +341,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				values.put(KEY_TYPE, fw.getmType());
 				values.put(KEY_FREQ, fw.getmFrequency());
 				values.put(KEY_ADDED_DATE, addedDate);
-				values.put(KEY_HAS_CARD, 0);
 
 				db.insert(TABLE_SAVED_WORDS, null, values);
 			}
