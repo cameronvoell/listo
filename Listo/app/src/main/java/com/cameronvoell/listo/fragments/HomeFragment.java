@@ -10,12 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cameronvoell.listo.R;
+import com.cameronvoell.listo.database.DatabaseHelper;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class HomeFragment extends Fragment {
 
     private TextView mNumberWordsSavedView;
@@ -41,10 +38,10 @@ public class HomeFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-//        mNumberWordsSavedView = (TextView)v.findViewById(R.id.words_saved);
-//        mNumberWordsSavedView.setText("0 words have been saved");
-//
-//        mNumberScheduledView = (TextView)v.findViewById(R.id.words_scheduled);
+        mNumberWordsSavedView = (TextView)v.findViewById(R.id.words_saved);
+        mNumberWordsSavedView.setText("0 words have been saved");
+
+        mNumberScheduledView = (TextView)v.findViewById(R.id.words_scheduled);
 
         return v;
     }
@@ -52,19 +49,15 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //DatabaseHelper helper = new DatabaseHelper(getContext());
-        int num = 0;//helper.getNumWordsSaved();
+        DatabaseHelper helper = new DatabaseHelper(getContext());
+        int num = helper.getNumWordsSavedToday();
 
         String text = "<font color=#C84C42>" + num + "</font> <font color=#333333> words saved today</font>";
-//        mNumberWordsSavedView.setText(Html.fromHtml(text));
+        mNumberWordsSavedView.setText(Html.fromHtml(text));
 
         String text2 = "<font color=#C84C42>  30</font> <font color=#333333> words awaiting review</font>";
- //       mNumberScheduledView.setText(Html.fromHtml(text2));
+        mNumberScheduledView.setText(Html.fromHtml(text2));
 
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        startActivity(new Intent(getContext(), CaptureWordActivity.class));
-//    }
 }

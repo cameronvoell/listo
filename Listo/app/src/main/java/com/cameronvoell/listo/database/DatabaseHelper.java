@@ -231,25 +231,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.delete(TABLE_SAVED_WORDS, KEY_SPANISH_WORD + "=\"" + spanishWord + "\"", null);
 	}
 
-//	public int getNumWordsSaved() {
-//		SQLiteDatabase db = this.getWritableDatabase();
-//		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SAVED_WORDS, null);
-//		int counter = 0;
-//		while (c.moveToNext()) {
-//			String s = c.getString(c.getColumnIndex(KEY_ADDED_DATE));
-//			SimpleDateFormat dateFormat = new SimpleDateFormat(
-//					"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-//			Date date = new Date();
-//			try {
-//				Date added = dateFormat.parse(s);
-//				if(date.getTime() - added.getTime() < 24 * 60 * 60 * 1000) counter++;
-//			} catch (ParseException e) {
-//				e.printStackTrace();
-//			}
-//			//counter++;
-//		}
-//		return counter;
-//	}
+	public int getNumWordsSavedToday() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SAVED_WORDS, null);
+		int counter = 0;
+		while (c.moveToNext()) {
+			String s = c.getString(c.getColumnIndex(KEY_ADDED_DATE));
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+			Date date = new Date();
+			try {
+				Date added = dateFormat.parse(s);
+				if(date.getTime() - added.getTime() < 24 * 60 * 60 * 1000) counter++;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			//counter++;
+		}
+		return counter;
+	}
 
 	public Cursor getSavedWordsCursor() {
 		SQLiteDatabase db = this.getWritableDatabase();

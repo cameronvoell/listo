@@ -73,4 +73,8 @@ public class HomeActivity extends AppCompatActivity {
 			((VocabWordListFragment)page).search();
 		}
 	}
+
+	public void goToReview(View view) {
+
+	}
 }
