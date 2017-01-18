@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 
 import com.cameronvoell.listo.R;
+import com.cameronvoell.listo.fragments.CustomizeFragment;
 import com.cameronvoell.listo.fragments.HomeFragment;
+import com.cameronvoell.listo.fragments.VerbsFragment;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 
@@ -24,10 +26,10 @@ public class BaseTabAdapter extends FragmentPagerAdapter implements SlidingTabLa
 	};
 
 	private static final String iconTxt[] = {
-			"Camera",
-			"Viedeo",
-			"Camera",
-			"Viedeo"
+			"home",
+			"vocabList",
+			"verbs",
+			"customize"
 	};
 
 	public BaseTabAdapter(AppCompatActivity activity) {
@@ -45,8 +47,16 @@ public class BaseTabAdapter extends FragmentPagerAdapter implements SlidingTabLa
 
 	@Override
 	public Fragment getItem(int position) {
-		if (position == 0) return HomeFragment.newInstance();
-		else return VocabWordListFragment.newInstance();
+		switch (position) {
+			case 0:
+				return HomeFragment.newInstance();
+			case 1:
+				return VocabWordListFragment.newInstance();
+			case 2:
+				return VerbsFragment.newInstance();
+			default:
+				return CustomizeFragment.newInstance();
+		}
 	}
 
 	@Override
