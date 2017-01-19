@@ -30,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	Context mContext;
 
 	//Used for upgrading the database
-	private static final int DATABASE_VERSION = 13;
+	private static final int DATABASE_VERSION = 14;
 
 	//name of our database file
 	private static final String DATABASE_NAME = "listo_database";
@@ -179,6 +179,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			word = cursorToFrequencyWord(c);
 		}
 		return word;
+	}
+
+	public int getNumWordsMemorized() {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String query = "SELECT * FROM " + TABLE_SAVED_WORDS
+				+ " WHERE " + KEY_MEMORIZED + " = 1";
+
+		Cursor c = db.rawQuery(query, null);
+		int numMemorized = 0;
+		while (c.moveToNext()) {
+			numMemorized++;
+		}
+		return numMemorized;
+	}
+
+	public int getNumWordsNotYetMemorized() {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String query = "SELECT * FROM " + TABLE_SAVED_WORDS
+				+ " WHERE " + KEY_MEMORIZED + " <> 1";
+
+		Cursor c = db.rawQuery(query, null);
+		int num = 0;
+		while (c.moveToNext()) {
+			num++;
+		}
+		return num;
+	}
+
+	public int getNumWordsFromTop5000() {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String query = "SELECT * FROM " + TABLE_SAVED_WORDS
+				+ " WHERE " + KEY_FREQ + " <> 9999";
+
+		Cursor c = db.rawQuery(query, null);
+		int num = 0;
+		while (c.moveToNext()) {
+			num++;
+		}
+		return num;
 	}
 
 	public FrequencyWord cursorToFrequencyWord (Cursor c) {

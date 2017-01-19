@@ -3,6 +3,8 @@ package com.cameronvoell.listo.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
+
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.fragments.ReviewCardAnswerFragment;
 import com.cameronvoell.listo.fragments.ReviewCardPromptFragment;
@@ -37,6 +39,10 @@ public class ReviewWordsActivity extends AppCompatActivity {
 	public void launchReviewSession(View view) {
 		mSession = mConfiguratorFragment.createReviewWordsSession();
 
+		if (mSession.isFinished()) {
+			Toast.makeText(getApplicationContext(), "no words to review!", Toast.LENGTH_SHORT).show();
+			return;
+		}
 
 		ReviewCardPromptFragment cardPromptFragment = new ReviewCardPromptFragment();
 		Bundle args = new Bundle();
