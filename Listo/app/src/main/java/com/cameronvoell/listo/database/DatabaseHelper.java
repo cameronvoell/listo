@@ -9,11 +9,13 @@ import android.text.TextUtils;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.model.FrequencyWord;
+import com.cameronvoell.listo.model.ReviewWordsSession;
 import com.cameronvoell.listo.model.SavedWord;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
@@ -28,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	Context mContext;
 
 	//Used for upgrading the database
-	private static final int DATABASE_VERSION = 11;
+	private static final int DATABASE_VERSION = 13;
 
 	//name of our database file
 	private static final String DATABASE_NAME = "listo_database";
@@ -221,6 +223,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put(KEY_FREQ, freq);
 		values.put(KEY_ADDED_DATE, addedDate);
 		values.put(KEY_TYPE, wordType);
+		values.put(KEY_EXAMPLE, "EMPTY");
+		values.put(KEY_HINT, "EMPTY");
+		values.put(KEY_MEMORIZED, 0);
+		values.put(KEY_MEMORY_STRENGTH, 0);
+		values.put(KEY_NUM_TIMES_REVIEWED, 0);
+		values.put(KEY_NUM_TIMES_INCORRECT, 0);
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.insert(TABLE_SAVED_WORDS, null, values);
@@ -242,11 +250,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			Date date = new Date();
 			try {
 				Date added = dateFormat.parse(s);
-				if(date.getTime() - added.getTime() < 24 * 60 * 60 * 1000) counter++;
+				int dateDay = date.getDay();
+				int addedDay = added.getDay();
+				int dateMonth = date.getMonth();
+				int addedMonth = added.getMonth();
+				int dateYear = date.getYear();
+				int addedYear = added.getYear();
+				if(dateDay == addedDay && dateMonth == addedMonth && dateYear == addedYear) {
+					counter++;
+				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			//counter++;
 		}
 		return counter;
 	}
@@ -341,16 +356,82 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				values.put(KEY_TYPE, fw.getmType());
 				values.put(KEY_FREQ, fw.getmFrequency());
 				values.put(KEY_ADDED_DATE, addedDate);
+				values.put(KEY_EXAMPLE, "EMPTY");
+				values.put(KEY_HINT, "EMPTY");
+				values.put(KEY_MEMORIZED, 0);
+				values.put(KEY_MEMORY_STRENGTH, 0);
+				values.put(KEY_NUM_TIMES_REVIEWED, 0);
+				values.put(KEY_NUM_TIMES_INCORRECT, 0);
 
 				db.insert(TABLE_SAVED_WORDS, null, values);
 			}
 		}
+	}
 
+	public ArrayList<SavedWord> getListOfWordsToReview(int numWords) {
 
+		SQLiteDatabase db = this.getWritableDatabase();
 
+		String query = "SELECT * FROM " + TABLE_SAVED_WORDS
+				+ " WHERE " + KEY_MEMORIZED + " <> 1"
+				+ " ORDER BY " + KEY_FREQ + " ASC";
 
+		Cursor c = db.rawQuery(query, null);
+		ArrayList<SavedWord> allWords = new ArrayList<>();
+		while (c.moveToNext()) {
+			allWords.add(cursorToSavedWord(c));
+		}
+		Collections.shuffle(allWords);
 
+		return allWords.size() < numWords ? allWords : new ArrayList<>(allWords.subList(0, 20));
+	}
 
+	public void updateWordReviewData(SavedWord savedWord, Integer attemptsNeeded) {
 
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		Date reviewedDate = new Date();
+		String reviewedDateFormatted = dateFormat.format(reviewedDate);
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(KEY_SPANISH_WORD, savedWord.getmWord());
+		values.put(KEY_ENG_DEF, savedWord.getmEng());
+		values.put(KEY_TYPE, savedWord.getmType());
+		values.put(KEY_FREQ, savedWord.getmFrequency());
+		values.put(KEY_ADDED_DATE, savedWord.getmAddedDate());
+		values.put(KEY_EXAMPLE, savedWord.getmExample());
+		values.put(KEY_HINT, savedWord.getmHint());
+		values.put(KEY_MEMORIZED, savedWord.ismIsMemorized() ? 1 : 0);
+		values.put(KEY_MEMORY_STRENGTH, savedWord.getmMemoryStrength());
+		values.put(KEY_NUM_TIMES_REVIEWED, savedWord.getmNumTimesReviewed() + 1);
+		values.put(KEY_NUM_TIMES_INCORRECT, savedWord.getmNumTimesIncorrect() + attemptsNeeded - 1);
+		values.put(KEY_LAST_REVIEWED_DATE, reviewedDateFormatted);
+		String WHERE = KEY_SPANISH_WORD + "=\"" + savedWord.getmWord() + "\"";
+		db.update(TABLE_SAVED_WORDS, values, WHERE, null);
+	}
+
+	public void updateWordReviewDataMemorized(SavedWord savedWord, Integer attemptsNeeded) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		Date reviewedDate = new Date();
+		String reviewedDateFormatted = dateFormat.format(reviewedDate);
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(KEY_SPANISH_WORD, savedWord.getmWord());
+		values.put(KEY_ENG_DEF, savedWord.getmEng());
+		values.put(KEY_TYPE, savedWord.getmType());
+		values.put(KEY_FREQ, savedWord.getmFrequency());
+		values.put(KEY_ADDED_DATE, savedWord.getmAddedDate());
+		values.put(KEY_EXAMPLE, savedWord.getmExample());
+		values.put(KEY_HINT, savedWord.getmHint());
+		values.put(KEY_MEMORIZED, 1);
+		values.put(KEY_MEMORY_STRENGTH, savedWord.getmMemoryStrength());
+		values.put(KEY_NUM_TIMES_REVIEWED, savedWord.getmNumTimesReviewed() + 1);
+		values.put(KEY_NUM_TIMES_INCORRECT, savedWord.getmNumTimesIncorrect() + attemptsNeeded - 1);
+		values.put(KEY_LAST_REVIEWED_DATE, reviewedDateFormatted);
+		String WHERE = KEY_SPANISH_WORD + "=\"" + savedWord.getmWord() + "\"";
+		db.update(TABLE_SAVED_WORDS, values, WHERE, null);
 	}
 }

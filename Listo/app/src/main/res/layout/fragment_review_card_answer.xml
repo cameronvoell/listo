@@ -22,6 +22,14 @@
         android:tint="@android:color/holo_red_dark"
         android:onClick="incorrectCard"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="memorized"
+        android:onClick="markWordMemorized"/>
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
