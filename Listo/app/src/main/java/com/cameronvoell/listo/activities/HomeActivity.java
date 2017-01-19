@@ -75,6 +75,6 @@ public class HomeActivity extends AppCompatActivity {
 	}
 
 	public void goToReview(View view) {
-
+		startActivity(new Intent(getApplicationContext(), ReviewWordsActivity.class));
 	}
 }
