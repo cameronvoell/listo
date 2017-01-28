@@ -82,7 +82,6 @@ public class VocabWordListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         SavedWord word = new DatabaseHelper(getContext()).cursorToSavedWord((Cursor) mAdapter.getItem(position));
-        Toast.makeText(getContext(), word.getmWord(), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), EditSavedWordActivity.class);
         intent.putExtra(EditSavedWordActivity.SAVED_WORD, word);

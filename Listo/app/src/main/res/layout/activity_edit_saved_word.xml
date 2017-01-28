@@ -195,8 +195,19 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/conjugations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_above="@+id/more_buttons"
+        android:onClick="showConjugations"
+        android:text="conjugations"
+        android:visibility="gone"/>
+
 
     <LinearLayout
+        android:id="@id/more_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/save"

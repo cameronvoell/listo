@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".activities.EditSavedWordActivity"/>
         <activity android:name=".activities.ReviewWordsActivity"/>
+        <activity android:name=".activities.VerbConjugationsActivity"/>
     </application>
 
 </manifest>
