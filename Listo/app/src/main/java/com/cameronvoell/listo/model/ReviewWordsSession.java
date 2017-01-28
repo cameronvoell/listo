@@ -49,6 +49,10 @@ public class ReviewWordsSession {
 		} else {
 			mCurrentCard = 0;
 		}
+
+		if (!isFinished()) {
+			iterateUntilNextCard();
+		}
 	}
 
 	public void setCurrentCardMemorized() {

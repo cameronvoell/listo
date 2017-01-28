@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="gravity"
             android:gravity="bottom"
+            android:layout_alignParentLeft="true"
             android:text="Español: "
             android:layout_weight=".25"/>
 
@@ -47,14 +48,7 @@
             android:id="@+id/spanish_word"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".6"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".15"
-            android:text="search"
-            android:onClick="searchFreqDataEdit"/>
+            android:layout_weight=".75"/>
 
     </LinearLayout>
 
