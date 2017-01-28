@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.cameronvoell.listo.activities.EditSavedWordActivity;
 import com.cameronvoell.listo.adapters.SavedWordCursorAdapter;
 import com.cameronvoell.listo.database.DatabaseHelper;
 import com.cameronvoell.listo.model.SavedWord;
+import com.cameronvoell.listo.util.ColorUtil;
 
 /**
  * A fragment representing a list of Items.
@@ -27,6 +29,7 @@ import com.cameronvoell.listo.model.SavedWord;
 public class VocabWordListFragment extends ListFragment {
 
     private boolean mSorted = false;
+    private  boolean mFiltered = false;
     private SavedWordCursorAdapter mAdapter;
 
     public static VocabWordListFragment newInstance() {
@@ -66,6 +69,8 @@ public class VocabWordListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_vocab_word_list, container, false);
+        LinearLayout buttons = (LinearLayout) v.findViewById(R.id.buttons);
+        buttons.setBackground(new ColorUtil(getContext()).getLightColorTwoDrawable());
         return v;
     }
 
@@ -102,6 +107,12 @@ public class VocabWordListFragment extends ListFragment {
     }
 
     public void filter() {
+        if (mFiltered) {
+            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor()));
+        } else {
+            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursorFilteredByNotMemorized()));
+        }
+        mFiltered = !mFiltered;
     }
 
     public void custom() {

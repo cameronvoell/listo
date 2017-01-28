@@ -1,19 +1,25 @@
 package com.cameronvoell.listo.activities;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.adapters.CaptureWordTabAdapter;
 import com.cameronvoell.listo.fragments.ManualWordCaptureFragment;
 import com.cameronvoell.listo.fragments.SuggestedWordCaptureFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
+import com.cameronvoell.listo.util.ColorUtil;
 
 /**
  * Created by cameronvoell on 1/15/17.
@@ -27,6 +33,15 @@ public class CaptureWordActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_capture_word);
+
+		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
+		mainLayout.setBackground(new ColorUtil(getApplicationContext()).getLightColorTwoDrawable());
+
+		ImageButton closeButton = (ImageButton)findViewById(R.id.close_btn);
+		closeButton.setBackground(new ColorUtil(getApplicationContext()).getLightColorTwoDrawable());
+
+		FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
+		fab.setBackgroundTintList(ColorStateList.valueOf(new ColorUtil(getApplicationContext()).getLightColorResource()));
 
 		setupViewPager();
 	}
@@ -42,10 +57,11 @@ public class CaptureWordActivity extends AppCompatActivity {
 		slidingTabLayout.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
 			@Override
 			public int getIndicatorColor(int position) {
-				return getResources().getColor(R.color.colorAccent);
+				return new ColorUtil(getApplicationContext()).getLightColorResource();
 			}
 		});
 		slidingTabLayout.setViewPager(mViewPager);
+		slidingTabLayout.setBackground(new ColorUtil(getApplicationContext()).getLightColorTwoDrawable());
 
 		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override

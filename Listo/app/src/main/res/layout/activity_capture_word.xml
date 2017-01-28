@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/activity_home"
+    android:id="@+id/main_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/colorAccentTwo"
-    tools:context="com.cameronvoell.listo.activities.HomeActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageButton
@@ -19,7 +16,6 @@
         android:src="@drawable/ic_action_goleft"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/colorAccentTwo"
         android:onClick="close"/>
 
     <com.cameronvoell.listo.ui_widgets.SlidingTabLayout

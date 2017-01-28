@@ -478,6 +478,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return c;
 	}
 
+	public Cursor getSavedWordsCursorFilteredByNotMemorized() {
+		String query = "SELECT * FROM " + TABLE_SAVED_WORDS
+				+ " WHERE " + KEY_MEMORIZED + " <> 1"
+				+ " ORDER BY " + KEY_FREQ + " ASC";
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor c = db.rawQuery(query, null);
+		return c;
+	}
+
 	public boolean contains(String word) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		String where = " WHERE " + KEY_SPANISH_WORD + "==\"" + word + "\"";
@@ -488,18 +498,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 		return counter > 0;
 	}
-
-//	public SavedWord getSavedWord(int position) {
-//		SQLiteDatabase db = this.getWritableDatabase();
-//		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_SAVED_WORDS + " ORDER BY " + KEY_ADDED_DATE + " DESC", null);
-//		int counter = 0;
-//		while (c.moveToNext()) {
-//			if (counter++ == position) {
-//				return cursorToSavedWord(c);
-//			}
-//		}
-//		return null;
-//	}
 
 	public FrequencyWord searchForWordWithEnglishDef(String englishWord) {
 		if (TextUtils.isEmpty(englishWord)) return null;
@@ -583,7 +581,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 		Collections.shuffle(allWords);
 
-		return allWords.size() < numWords ? allWords : new ArrayList<>(allWords.subList(0, 20));
+		return allWords.size() < numWords ? allWords : new ArrayList<>(allWords.subList(0, numWords - 1));
 	}
 
 	public void updateWordReviewData(SavedWord savedWord, Integer attemptsNeeded) {

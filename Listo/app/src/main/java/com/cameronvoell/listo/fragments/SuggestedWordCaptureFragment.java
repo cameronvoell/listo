@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.adapters.SavedWordCursorAdapter;
 import com.cameronvoell.listo.adapters.SuggestedWordCursorAdapter;
 import com.cameronvoell.listo.database.DatabaseHelper;
+import com.cameronvoell.listo.util.ColorUtil;
 
 /**
  * Created by cameronvoell on 1/15/17.
@@ -22,6 +24,7 @@ import com.cameronvoell.listo.database.DatabaseHelper;
 public class SuggestedWordCaptureFragment extends ListFragment {
 
 	private boolean mSorted = false;
+	private boolean mFiltered = false;
 	private TextView mNumSelectedTextView;
 	private SuggestedWordCursorAdapter mAdapter;
 	private DatabaseHelper mDatabaseHelper;
@@ -67,6 +70,9 @@ public class SuggestedWordCaptureFragment extends ListFragment {
 
 		mNumSelectedTextView = (TextView) v.findViewById(R.id.numSelected);
 
+		LinearLayout buttons = (LinearLayout)v.findViewById(R.id.buttons);
+		buttons.setBackground(new ColorUtil(getContext()).getLightColorTwoDrawable());
+
 		return v;
 	}
 
@@ -104,6 +110,7 @@ public class SuggestedWordCaptureFragment extends ListFragment {
 	}
 
 	public void filter() {
+
 	}
 
 	public void custom() {

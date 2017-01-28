@@ -1,6 +1,7 @@
 package com.cameronvoell.listo.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -11,9 +12,12 @@ import android.widget.TextView;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.database.DatabaseHelper;
+import com.cameronvoell.listo.util.ColorUtil;
 
 
 public class VerbsFragment extends Fragment {
+
+    private View mView;
 
     public static VerbsFragment newInstance() {
         VerbsFragment fragment = new VerbsFragment();
@@ -33,9 +37,10 @@ public class VerbsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_verbs, container, false);
+        mView = inflater.inflate(R.layout.fragment_verbs, container, false);
+        mView.setBackground(new ColorUtil(getContext()).getLightColorTwoDrawable());
 
-        return v;
+        return mView;
     }
 
     @Override
@@ -43,4 +48,7 @@ public class VerbsFragment extends Fragment {
         super.onResume();
     }
 
+    public void updateBackgroundColor() {
+        if (getView() != null)getView().setBackground(new ColorUtil(getContext()).getLightColorTwoDrawable());
+    }
 }

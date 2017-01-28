@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Listo</string>
+    <string name="listo_shared_preferences">listoSharedPreferences</string>
+    <string name="colombia_theme">Colombia Theme</string>
+    <string name="espana_theme">España Theme</string>
+    <string name="mexico_theme">Mexico Theme</string>
+    <string name="argentina_theme">Argentina Theme</string>
 </resources>
