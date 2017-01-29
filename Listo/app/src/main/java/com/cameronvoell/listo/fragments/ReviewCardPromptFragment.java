@@ -1,7 +1,7 @@
 package com.cameronvoell.listo.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.model.SavedWord;
+import com.cameronvoell.listo.util.ColorUtil;
 
 /**
  * Created by cameronvoell on 1/18/17.
@@ -29,6 +30,9 @@ public class ReviewCardPromptFragment extends Fragment {
 
 		View v = inflater.inflate(R.layout.fragment_review_card_prompt, container, false);
 		mMainPromptTextView = (TextView) v.findViewById(R.id.mainPrompt);
+
+		v.setBackground(new ColorUtil(getActivity()).getDarkColorDrawable());
+		mMainPromptTextView.setTextColor(new ColorUtil(getActivity()).getLightColorTwoResource());
 
 		Bundle args = getArguments();
 		mSavedWord = args.getParcelable(KEY_SAVED_WORD);

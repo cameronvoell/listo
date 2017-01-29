@@ -12,4 +12,5 @@
     <color name="colorDarkArgentina">#00bfff</color>
     <color name="colorLightArgentina">#F4EA79</color>
     <color name="colorLightTwoArgentina">#f2f2f2</color>
+    <color name="lightBlack">#121212</color>
 </resources>

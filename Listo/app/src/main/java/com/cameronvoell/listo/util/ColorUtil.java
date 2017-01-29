@@ -124,7 +124,7 @@ public class ColorUtil {
 	}
 
 	public void updateTheme(int theme) {
-		mPreferences.edit().putInt(KEY_PREFERENCES_THEME, theme).commit();
+		mPreferences.edit().putInt(KEY_PREFERENCES_THEME, theme).apply();
 		mCurrentTheme = theme;
 	}
 }

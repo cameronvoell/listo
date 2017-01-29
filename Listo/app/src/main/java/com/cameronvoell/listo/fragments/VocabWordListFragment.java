@@ -1,9 +1,11 @@
 package com.cameronvoell.listo.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -41,12 +43,15 @@ public class VocabWordListFragment extends ListFragment {
     public static final int FILTER_OPTION_WORDS_NEEDING_REVIEW = 1;
     public static final int FILTER_OPTION_VERBS_READY_FOR_PRACTICE = 2;
 
+    public static final String PREF_VOCAB_LIST_FILTER = "PREF_VOCAB_LIST_FILTER";
+
     private SavedWordCursorAdapter mAdapter;
     private Button mFilterButton;
     private TextView mFilterNameTextView;
 
     private boolean mFiltered = false;
-    private int mFilterOption = 0;
+    private int mFilterOption = FILTER_OPTION_WORDS_NEEDING_REVIEW;
+    private SharedPreferences mPreferences;
 
     private DatabaseHelper mDatabaseHelper;
 
@@ -70,6 +75,10 @@ public class VocabWordListFragment extends ListFragment {
         mDatabaseHelper = new DatabaseHelper(getContext());
         mAdapter = new SavedWordCursorAdapter(getContext(), mDatabaseHelper.getSavedWordsCursor(mFilterOption));
         setListAdapter(mAdapter);
+
+        mPreferences = getContext().getSharedPreferences(getContext().getString(
+                R.string.listo_shared_preferences), 0);
+        mFilterOption = mPreferences.getInt(PREF_VOCAB_LIST_FILTER, FILTER_OPTION_WORDS_NEEDING_REVIEW);
     }
 
     @Override
@@ -95,18 +104,17 @@ public class VocabWordListFragment extends ListFragment {
                     public boolean onMenuItemClick(MenuItem item) {
                         String choice = item.getTitle().toString();
                         switch (choice) {
-                            case "My Saved Words":
-                                mFilterOption = FILTER_OPTION_MY_SAVED_WORDS;
-                                break;
                             case "Words Needing Review":
                                 mFilterOption = FILTER_OPTION_WORDS_NEEDING_REVIEW;
+                                break;
+                            case "My Saved Words":
+                                mFilterOption = FILTER_OPTION_MY_SAVED_WORDS;
                                 break;
                             case "Verbs Ready for Practice":
                                 mFilterOption = FILTER_OPTION_VERBS_READY_FOR_PRACTICE;
                                 break;
                         }
-                        mAdapter.swapCursor(mDatabaseHelper.getSavedWordsCursor(mFilterOption));
-                        mFilterNameTextView.setText(getFilterNameString());
+                        updateFilter(mFilterOption);
                         return true;
                     }
                 });
@@ -141,6 +149,9 @@ public class VocabWordListFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+        mPreferences = getContext().getSharedPreferences(getContext().getString(
+                R.string.listo_shared_preferences), 0);
+        mFilterOption = mPreferences.getInt(PREF_VOCAB_LIST_FILTER, 1);
         mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor(mFilterOption));
         setListAdapter(mAdapter);
     }
@@ -167,6 +178,19 @@ public class VocabWordListFragment extends ListFragment {
             setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursorFilteredByNotMemorized()));
         }
         mFiltered = !mFiltered;
+    }
+
+    public void updateFilter(int filterOption) {
+        mFilterOption = filterOption;
+        mPreferences = getContext().getSharedPreferences(getContext().getString(
+                R.string.listo_shared_preferences), 0);
+        mPreferences.edit().putInt(PREF_VOCAB_LIST_FILTER, mFilterOption).apply();
+        mAdapter.swapCursor(mDatabaseHelper.getSavedWordsCursor(mFilterOption));
+        mFilterNameTextView.setText(getFilterNameString());
+    }
+
+    public void updateFilter() {
+        updateFilter(mFilterOption);
     }
 
     /**

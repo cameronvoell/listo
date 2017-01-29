@@ -1,12 +1,11 @@
 package com.cameronvoell.listo.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.database.DatabaseHelper;
@@ -44,7 +43,7 @@ public class ReviewWordsConfiguratorFragment extends Fragment {
 
 	public ReviewWordsSession createReviewWordsSession() {
 		int numWords = Integer.valueOf(mNumWordsEditText.getText().toString());
-		ArrayList<SavedWord> wordsToReview = new ArrayList<>();//mDatabaseHelper.getListOfWordsToReview(numWords);
+		ArrayList<SavedWord> wordsToReview = mDatabaseHelper.getListOfWordsToReview(numWords);
 		return new ReviewWordsSession(wordsToReview, mDatabaseHelper);
 	}
 }

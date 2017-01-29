@@ -15,6 +15,7 @@ import android.widget.Button;
 
 import com.cameronvoell.listo.adapters.BaseTabAdapter;
 import com.cameronvoell.listo.R;
+import com.cameronvoell.listo.fragments.CustomizeFragment;
 import com.cameronvoell.listo.fragments.HomeFragment;
 import com.cameronvoell.listo.fragments.VerbsFragment;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
@@ -22,6 +23,10 @@ import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 import com.cameronvoell.listo.util.ColorUtil;
 
 public class MainActivity extends AppCompatActivity {
+
+	public static final int RESULT_CODE_ADDED_WORD = 0;
+	public static final int RESULT_CODE_PRUNING_SESSION = 1;
+	public static final int RESULT_CODE_REVIEW_SESSION = 2;
 
 	ViewPager mViewPager;
 	BaseTabAdapter mAdapter;
@@ -43,6 +48,25 @@ public class MainActivity extends AppCompatActivity {
 	protected void onResume() {
 		super.onResume();
 
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == RESULT_CODE_ADDED_WORD) {
+			if (resultCode == RESULT_OK) {
+				mViewPager.setCurrentItem(1);
+				Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+				if (page != null) {
+					((VocabWordListFragment)page).updateFilter(VocabWordListFragment.FILTER_OPTION_MY_SAVED_WORDS);
+				}
+			}
+		} else if (requestCode == RESULT_CODE_PRUNING_SESSION ||
+				   requestCode == RESULT_CODE_REVIEW_SESSION) {
+//				getApplicationContext().getSharedPreferences(getApplicationContext().getString(
+//				R.string.listo_shared_preferences), 0).edit().putInt(
+//				VocabWordListFragment.PREF_VOCABf_LIST_FILTER,
+//				VocabWordListFragment.FILTER_OPTION_WORDS_NEEDING_REVIEW).apply();
+		}
 	}
 
 	private void setupViewPager() {
@@ -85,6 +109,10 @@ public class MainActivity extends AppCompatActivity {
 						((HomeFragment)page).resetActionBoxes();
 					}
 				} else {
+					Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+					if (mViewPager.getCurrentItem() == 1 && page != null) {
+						((VocabWordListFragment)page).updateFilter();
+					}
 					mFab.show();
 				}
 			}
@@ -98,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void captureWord(View v) {
-		startActivity(new Intent(getApplicationContext(), CaptureWordActivity.class));
+		startActivityForResult(new Intent(getApplicationContext(), CaptureWordActivity.class), RESULT_CODE_ADDED_WORD);
 	}
 
 	public void filter(View view) {
@@ -109,11 +137,13 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	public void goToReview(View view) {
-		startActivity(new Intent(getApplicationContext(), ReviewWordsActivity.class));
+		startActivityForResult(new Intent(getApplicationContext(), ReviewWordsActivity.class),
+				RESULT_CODE_REVIEW_SESSION);
 	}
 
 	public void goToPruning(View view) {
-		startActivity(new Intent(getApplicationContext(), PruneWordsActivity.class));
+		startActivityForResult(new Intent(getApplicationContext(), PruneWordsActivity.class),
+				RESULT_CODE_PRUNING_SESSION);
 	}
 
 	public void setTheme(View view) {
@@ -143,6 +173,10 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 		mFab.setBackgroundTintList(ColorStateList.valueOf(new ColorUtil(getApplicationContext()).getLightColorResource()));
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 3 && page != null) {
+			((CustomizeFragment)page).updateHighlights();
+		}
 	}
 
 	public void viewBackground(View view) {

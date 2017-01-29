@@ -2,13 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/white">
+              android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/mainPrompt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="96dp"
+        android:textAlignment="center"
+        android:textSize="32sp"
         android:layout_alignParentTop="true"
         android:text="sample word"/>
 
@@ -16,7 +19,9 @@
         android:id="@+id/showHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/mainPrompt"
+        android:layout_marginTop="48dp"
         android:text="show hint?"/>
 
     <TextView
@@ -31,6 +36,7 @@
         android:id="@+id/showImages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/hintText"
         android:text="show images"/>
 

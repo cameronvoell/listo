@@ -60,6 +60,7 @@ public class CaptureWordActivity extends AppCompatActivity {
 
 	public void captureWord(View view) {
 		if(mWordCaptureFragment.captureWord()) {
+			setResult(RESULT_OK);
 			close(null);
 		}
 	}

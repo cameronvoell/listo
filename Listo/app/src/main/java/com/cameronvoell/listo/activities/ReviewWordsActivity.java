@@ -27,7 +27,7 @@ public class ReviewWordsActivity extends AppCompatActivity {
 
 
 		mConfiguratorFragment = new ReviewWordsConfiguratorFragment();
-		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer,
+		getFragmentManager().beginTransaction().add(R.id.fragmentContainer,
 				mConfiguratorFragment).commit();
 
 	}
@@ -49,7 +49,7 @@ public class ReviewWordsActivity extends AppCompatActivity {
 		args.putParcelable(ReviewCardPromptFragment.KEY_SAVED_WORD, mSession.getCurrentSavedWord());
 		cardPromptFragment.setArguments(args);
 
-		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, cardPromptFragment).commit();
+		getFragmentManager().beginTransaction().replace(R.id.fragmentContainer, cardPromptFragment).commit();
 	}
 
 	public void flipCard(View view) {
@@ -58,8 +58,12 @@ public class ReviewWordsActivity extends AppCompatActivity {
 		args.putParcelable(ReviewCardAnswerFragment.KEY_SAVED_WORD, mSession.getCurrentSavedWord());
 		cardAnswerFragment.setArguments(args);
 
-		getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer,
-				cardAnswerFragment).commit();
+		getFragmentManager().beginTransaction()
+				.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
+									 R.animator.card_flip_left_in, R.animator.card_flip_left_out)
+				.replace(R.id.fragmentContainer, cardAnswerFragment)
+				.addToBackStack(null)
+				.commit();
 	}
 
 	public void correctCard(View view) {
@@ -83,7 +87,10 @@ public class ReviewWordsActivity extends AppCompatActivity {
 			Bundle args = new Bundle();
 			args.putParcelable(ReviewCardPromptFragment.KEY_SAVED_WORD, mSession.getCurrentSavedWord());
 			cardPromptFragment.setArguments(args);
-			getSupportFragmentManager().beginTransaction().add(R.id.fragmentContainer, cardPromptFragment).commit();
+			getFragmentManager().beginTransaction()
+					.setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out,
+							R.animator.card_flip_left_in, R.animator.card_flip_left_out)
+					.replace(R.id.fragmentContainer, cardPromptFragment).commit();
 		} else {
 			finish();
 		}
