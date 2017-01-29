@@ -58,7 +58,7 @@ public class ManualWordCaptureFragment extends Fragment {
 
 	}
 
-	public void captureWord() {
+	public boolean captureWord() {
 		String spanishWord = mSpanishWordEntry.getText().toString();
 		String englishDef = mEnglishDefinitionEntry.getText().toString();
 		String wordType = mWordTypeTextView.getText().toString();
@@ -66,10 +66,10 @@ public class ManualWordCaptureFragment extends Fragment {
 
 		if (mDbHelper.contains(spanishWord)) {
 			Toast.makeText(getContext(), spanishWord + " is already saved!", Toast.LENGTH_SHORT).show();
-			return;
+			return false;
 		} else if (TextUtils.isEmpty(spanishWord)){
 			Toast.makeText(getContext(), spanishWord + "empty field", Toast.LENGTH_SHORT).show();
-			return;
+			return false;
 		}
 
 
@@ -77,12 +77,13 @@ public class ManualWordCaptureFragment extends Fragment {
 		if (!TextUtils.isEmpty(freqString)) {
 			freq = Integer.parseInt(freqString);
 		}
-		mDbHelper.saveVocabWord(spanishWord, englishDef, wordType, freq);
+		mDbHelper.saveVocabWordManually(spanishWord, englishDef, wordType, freq);
 		mSpanishWordEntry.setText("");
 		mEnglishDefinitionEntry.setText("");
 		mWordTypeTextView.setText("");
 		mFrequencyTextView.setText("");
 		Toast.makeText(getContext(), spanishWord + " saved!", Toast.LENGTH_SHORT).show();
+		return true;
 	}
 
 	public void autoFill() {

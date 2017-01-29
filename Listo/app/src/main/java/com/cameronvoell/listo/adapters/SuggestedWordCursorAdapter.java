@@ -99,17 +99,17 @@ public class SuggestedWordCursorAdapter extends CursorAdapter {
 			shouldAddCheckBox.setChecked(false);
 		}
 
-		shouldAddCheckBox.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mFragment.updateNumSelected(shouldAddCheckBox.isChecked());
-				if (shouldAddCheckBox.isChecked()) {
-					mCheckedIndices.add(freq);
-				} else {
-					mCheckedIndices.remove(freq);
-				}
-			}
-		});
+//		shouldAddCheckBox.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				mFragment.updateNumSelected(shouldAddCheckBox.isChecked());
+//				if (shouldAddCheckBox.isChecked()) {
+//					mCheckedIndices.add(freq);
+//				} else {
+//					mCheckedIndices.remove(freq);
+//				}
+//			}
+//		});
 	}
 
 	public HashSet<Integer> getCheckedIndices() {
@@ -117,7 +117,7 @@ public class SuggestedWordCursorAdapter extends CursorAdapter {
 	}
 
 	public void clearSelections() {
-		mCheckedIndices.clear();
-		mFragment.zeroNumSelected();
+//		mCheckedIndices.clear();
+//		mFragment.zeroNumSelected();
 	}
 }

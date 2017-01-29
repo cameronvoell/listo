@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activities.HomeActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -18,11 +18,13 @@
         <activity
             android:name=".activities.CaptureWordActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity android:name=".activities.EditSavedWordActivity"/>
         <activity android:name=".activities.ReviewWordsActivity"/>
         <activity android:name=".activities.VerbConjugationsActivity"/>
+        <activity android:name=".activities.PruneWordsActivity">
+        </activity>
     </application>
 
 </manifest>

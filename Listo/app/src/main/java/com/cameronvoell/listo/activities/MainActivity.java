@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.cameronvoell.listo.adapters.BaseTabAdapter;
 import com.cameronvoell.listo.R;
@@ -19,7 +20,7 @@ import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
 import com.cameronvoell.listo.util.ColorUtil;
 
-public class HomeActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
 	ViewPager mViewPager;
 	BaseTabAdapter mAdapter;
@@ -85,13 +86,6 @@ public class HomeActivity extends AppCompatActivity {
 		startActivity(new Intent(getApplicationContext(), CaptureWordActivity.class));
 	}
 
-	public void sort(View view) {
-		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
-		if (mViewPager.getCurrentItem() == 1 && page != null) {
-			((VocabWordListFragment)page).sort();
-		}
-	}
-
 	public void filter(View view) {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
 		if (mViewPager.getCurrentItem() == 1 && page != null) {
@@ -99,22 +93,12 @@ public class HomeActivity extends AppCompatActivity {
 		}
 	}
 
-	public void custom(View view) {
-		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
-		if (mViewPager.getCurrentItem() == 1 && page != null) {
-			((VocabWordListFragment)page).custom();
-		}
-	}
-
-	public void search(View view) {
-		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
-		if (mViewPager.getCurrentItem() == 1 && page != null) {
-			((VocabWordListFragment)page).search();
-		}
-	}
-
 	public void goToReview(View view) {
 		startActivity(new Intent(getApplicationContext(), ReviewWordsActivity.class));
+	}
+
+	public void goToPruning(View view) {
+		startActivity(new Intent(getApplicationContext(), PruneWordsActivity.class));
 	}
 
 	public void setTheme(View view) {

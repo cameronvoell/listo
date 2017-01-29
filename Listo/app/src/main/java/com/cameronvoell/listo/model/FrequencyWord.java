@@ -22,6 +22,19 @@ public class FrequencyWord {
 	public static final String TYPE_PREP = "prep";
 	public static final String TYPE_PRON = "pron";
 
+	private int mFrequency;
+	private String mWord;
+	private String mEng;
+	private String mType;
+	private boolean mIsPruned;
+
+	public FrequencyWord(int frequency, String spanish, String eng, String type, boolean isPruned) {
+		mFrequency = frequency;
+		mWord = spanish;
+		mEng = eng;
+		mType = type;
+		mIsPruned = isPruned;
+	}
 
 	public int getmFrequency() {
 		return mFrequency;
@@ -55,15 +68,11 @@ public class FrequencyWord {
 		this.mType = mType;
 	}
 
-	private int mFrequency;
-	private String mWord;
-	private String mEng;
-	private String mType;
+	public boolean ismIsPruned() {
+		return mIsPruned;
+	}
 
-	public FrequencyWord(int frequency, String spanish, String eng, String type) {
-		mFrequency = frequency;
-		mWord = spanish;
-		mEng = eng;
-		mType = type;
+	public void setmIsPruned(boolean mIsPruned) {
+		this.mIsPruned = mIsPruned;
 	}
 }

@@ -17,7 +17,7 @@ public class HomeFragment extends Fragment {
 
     private TextView mNumberWordsSavedView;
     private TextView mNumberScheduledView;
-    private TextView mNumberMemorizedView;
+    private TextView mNumberWordsAwaitingSentencePracticeView;
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment {
 
         mNumberWordsSavedView = (TextView)v.findViewById(R.id.words_saved);
         mNumberScheduledView = (TextView)v.findViewById(R.id.words_scheduled);
-        mNumberMemorizedView = (TextView)v.findViewById(R.id.words_memorized);
+        mNumberWordsAwaitingSentencePracticeView = (TextView)v.findViewById(R.id.words_awaiting_sentence_practice);
 
         return v;
     }
@@ -50,18 +50,18 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         DatabaseHelper helper = new DatabaseHelper(getContext());
-        int numSavedToday = helper.getNumWordsSavedToday();
-        int numMemorized = helper.getNumWordsMemorized();
+        int numPruned = helper.getNumFreqWordsPruned();
         int numSavedNotYetMemorized = helper.getNumWordsNotYetMemorized();
+        int numWordsAwaitingSentencePractice = helper.getNumWordsMemorized();
 
-        String text = "<font color=#C84C42>" + numSavedToday + "</font> <font color=#333333> words saved today</font>";
+        String text = "<font color=#C84C42>" + numPruned + "</font><font color=#333333>/5000 words pruned</font>";
         mNumberWordsSavedView.setText(Html.fromHtml(text));
 
-        String text2 = "<font color=#C84C42>" + numMemorized + "</font> <font color=#333333> words memorized</font>";
-        mNumberMemorizedView.setText(Html.fromHtml(text2));
+        String text2 = "<font color=#C84C42>" + numSavedNotYetMemorized + "</font><font color=#333333> words awaiting memorization</font>";
+        mNumberScheduledView.setText(Html.fromHtml(text2));
 
-        String text3 = "<font color=#C84C42>" + numSavedNotYetMemorized + "</font> <font color=#333333> words awaiting review</font>";
-        mNumberScheduledView.setText(Html.fromHtml(text3));
+        String text3 = "<font color=#C84C42>" + numWordsAwaitingSentencePractice + "</font><font color=#333333> words awaiting sentence practice</font>";
+        mNumberWordsAwaitingSentencePracticeView.setText(Html.fromHtml(text3));
 
     }
 

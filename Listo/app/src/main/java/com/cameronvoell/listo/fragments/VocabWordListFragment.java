@@ -4,12 +4,19 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cameronvoell.listo.R;
@@ -18,6 +25,8 @@ import com.cameronvoell.listo.adapters.SavedWordCursorAdapter;
 import com.cameronvoell.listo.database.DatabaseHelper;
 import com.cameronvoell.listo.model.SavedWord;
 import com.cameronvoell.listo.util.ColorUtil;
+
+import org.w3c.dom.Text;
 
 /**
  * A fragment representing a list of Items.
@@ -28,9 +37,19 @@ import com.cameronvoell.listo.util.ColorUtil;
  */
 public class VocabWordListFragment extends ListFragment {
 
-    private boolean mSorted = false;
-    private  boolean mFiltered = false;
+    public static final int FILTER_OPTION_MY_SAVED_WORDS = 0;
+    public static final int FILTER_OPTION_WORDS_NEEDING_REVIEW = 1;
+    public static final int FILTER_OPTION_VERBS_READY_FOR_PRACTICE = 2;
+
     private SavedWordCursorAdapter mAdapter;
+    private Button mFilterButton;
+    private TextView mFilterNameTextView;
+
+    private boolean mFiltered = false;
+    private int mFilterOption = 0;
+
+    private DatabaseHelper mDatabaseHelper;
+
 
     public static VocabWordListFragment newInstance() {
         VocabWordListFragment fragment = new VocabWordListFragment();
@@ -47,37 +66,82 @@ public class VocabWordListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor());
+
+        mDatabaseHelper = new DatabaseHelper(getContext());
+        mAdapter = new SavedWordCursorAdapter(getContext(), mDatabaseHelper.getSavedWordsCursor(mFilterOption));
         setListAdapter(mAdapter);
     }
 
-    /**
-     * Provide default implementation to return a simple list view.  Subclasses
-     * can override to replace with their own layout.  If doing so, the
-     * returned view hierarchy <em>must</em> have a ListView whose id
-     * is {@link android.R.id#list android.R.id.list} and can optionally
-     * have a sibling view id {@link android.R.id#empty android.R.id.empty}
-     * that is to be shown when the list is empty.
-     *
-     * <p>If you are overriding this method with your own custom content,
-     * consider including the standard layout {@link android.R.layout#list_content}
-     * in your layout file, so that you continue to retain all of the standard
-     * behavior of ListFragment.  In particular, this is currently the only
-     * way to have the built-in indeterminant progress state be shown.
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_vocab_word_list, container, false);
-        LinearLayout buttons = (LinearLayout) v.findViewById(R.id.buttons);
+        RelativeLayout buttons = (RelativeLayout) v.findViewById(R.id.buttons);
         buttons.setBackground(new ColorUtil(getContext()).getLightColorTwoDrawable());
+        mFilterButton = (Button) v.findViewById(R.id.filterButton);
+        mFilterNameTextView = (TextView)v.findViewById(R.id.filterName);
+        mFilterNameTextView.setText(getFilterNameString());
+        mFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(getContext(), mFilterButton);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater()
+                        .inflate(R.menu.filter_menu, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        String choice = item.getTitle().toString();
+                        switch (choice) {
+                            case "My Saved Words":
+                                mFilterOption = FILTER_OPTION_MY_SAVED_WORDS;
+                                break;
+                            case "Words Needing Review":
+                                mFilterOption = FILTER_OPTION_WORDS_NEEDING_REVIEW;
+                                break;
+                            case "Verbs Ready for Practice":
+                                mFilterOption = FILTER_OPTION_VERBS_READY_FOR_PRACTICE;
+                                break;
+                        }
+                        mAdapter.swapCursor(mDatabaseHelper.getSavedWordsCursor(mFilterOption));
+                        mFilterNameTextView.setText(getFilterNameString());
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
+
+            }
+        });
+
         return v;
+    }
+
+    private Spanned getFilterNameString() {
+        int num = mAdapter.getCount();
+        String text = "";
+
+        switch (mFilterOption) {
+            case FILTER_OPTION_MY_SAVED_WORDS:
+                text = "<font color=#C84C42>" + num + "</font><font color=#333333> captured words</font>";
+                break;
+            case FILTER_OPTION_WORDS_NEEDING_REVIEW:
+                text = "<font color=#C84C42>" + num + "</font><font color=#333333> words needing review</font>";
+                break;
+            case FILTER_OPTION_VERBS_READY_FOR_PRACTICE:
+                text = "<font color=#C84C42>" + num + "</font><font color=#333333> verbs ready for practice</font>";
+                break;
+        }
+
+        return Html.fromHtml(text);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor());
+        mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor(mFilterOption));
         setListAdapter(mAdapter);
     }
 
@@ -96,29 +160,13 @@ public class VocabWordListFragment extends ListFragment {
 
     }
 
-    public void sort() {
-        if (mSorted) {
-            mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor());
-        } else {
-            mAdapter = new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursorSortedByFrequency());
-        }
-        setListAdapter(mAdapter);
-        mSorted = !mSorted;
-    }
-
     public void filter() {
         if (mFiltered) {
-            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor()));
+            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor(mFilterOption)));
         } else {
             setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursorFilteredByNotMemorized()));
         }
         mFiltered = !mFiltered;
-    }
-
-    public void custom() {
-    }
-
-    public void search() {
     }
 
     /**

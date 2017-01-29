@@ -9,6 +9,10 @@ import android.os.Parcelable;
 
 public class SavedWord implements Parcelable {
 
+	public static final int MEMORIZED_NOT_KNOWN = 0;
+	public static final int MEMORIZED_MEANING_KNOWN = 1;
+	public static final int MEMORIZED_WORD_MASTERED = 2;
+
 	private String mWord;
 	private String mEng;
 	private int mFrequency;
@@ -21,10 +25,13 @@ public class SavedWord implements Parcelable {
 	private String mLastReviewedDate;
 	private int mNumTimesReviewed;
 	private int mNumTimesIncorrect;
+	private boolean mIsPruned;
+	private boolean mIsManuallyAdded;
 
 	public SavedWord(String spanish, String eng, int frequency, String addedDate, String type,
 					 String example, String hint, boolean isMemorized, int memoryStrength,
-					 String lastReviewedDate, int numTimesReviewed, int numTimesIncorrect) {
+					 String lastReviewedDate, int numTimesReviewed, int numTimesIncorrect,
+					 boolean isPruned, boolean isManuallyAdded) {
 		mWord = spanish;
 		mEng = eng;
 		mFrequency = frequency;
@@ -37,6 +44,8 @@ public class SavedWord implements Parcelable {
 		mLastReviewedDate = lastReviewedDate;
 		mNumTimesReviewed = numTimesReviewed;
 		mNumTimesIncorrect = numTimesIncorrect;
+		mIsPruned = isPruned;
+		mIsManuallyAdded = isManuallyAdded;
 	}
 
 	public String getmWord() {
@@ -136,6 +145,23 @@ public class SavedWord implements Parcelable {
 		this.mNumTimesIncorrect = mNumTimesIncorrect;
 	}
 
+
+	public boolean ismIsPruned() {
+		return mIsPruned;
+	}
+
+	public void setmIsPruned(boolean mIsPruned) {
+		this.mIsPruned = mIsPruned;
+	}
+
+	public boolean ismIsManuallyAdded() {
+		return mIsManuallyAdded;
+	}
+
+	public void setmIsManuallyAdded(boolean mIsManuallyAdded) {
+		this.mIsManuallyAdded = mIsManuallyAdded;
+	}
+
 	protected SavedWord(Parcel in) {
 		mWord = in.readString();
 		mEng = in.readString();
@@ -149,6 +175,8 @@ public class SavedWord implements Parcelable {
 		mLastReviewedDate = in.readString();
 		mNumTimesReviewed = in.readInt();
 		mNumTimesIncorrect = in.readInt();
+		mIsPruned = in.readByte() != 0;
+		mIsManuallyAdded = in.readByte() != 0;
 	}
 
 	public static final Creator<SavedWord> CREATOR = new Creator<SavedWord>() {
@@ -182,6 +210,14 @@ public class SavedWord implements Parcelable {
 		dest.writeString(mLastReviewedDate);
 		dest.writeInt(mNumTimesReviewed);
 		dest.writeInt(mNumTimesIncorrect);
+		dest.writeByte((byte)(mIsPruned ? 1 : 0));
+		dest.writeByte((byte)(mIsManuallyAdded ? 1 : 0));
 	}
+
+	@Override
+	public String toString() {
+		return mWord;
+	}
+
 }
 

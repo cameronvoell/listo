@@ -19,7 +19,8 @@
             android:id="@+id/words_saved"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"
             android:layout_alignParentLeft="true"
             android:padding="8dp"/>
 
@@ -27,12 +28,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_action_line_chart"/>
+            android:src="@android:drawable/ic_media_play"
+            android:onClick="goToPruning"/>
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/memorized_box"
+        android:id="@+id/words_awaiting_memorization"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -42,18 +44,20 @@
         android:layout_below="@id/saved_box">
 
         <TextView
-            android:id="@+id/words_memorized"
-            android:layout_width="match_parent"
+            android:id="@+id/words_scheduled"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"
             android:layout_alignParentLeft="true"
-            android:padding="8dp"/>
+            android:padding="8dp" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_action_line_chart"/>
+            android:src="@android:drawable/ic_media_play"
+            android:onClick="goToReview"/>
 
     </RelativeLayout>
 
@@ -63,13 +67,14 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:background="#CCFFFFFF"
-        android:layout_below="@id/memorized_box">
+        android:layout_below="@id/words_awaiting_memorization">
 
         <TextView
-            android:id="@+id/words_scheduled"
+            android:id="@+id/words_awaiting_sentence_practice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:layout_centerVertical="true"
+            android:textSize="18sp"
             android:layout_alignParentLeft="true"
             android:padding="8dp" />
 

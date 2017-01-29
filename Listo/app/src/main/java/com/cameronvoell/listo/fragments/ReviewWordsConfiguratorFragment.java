@@ -44,7 +44,7 @@ public class ReviewWordsConfiguratorFragment extends Fragment {
 
 	public ReviewWordsSession createReviewWordsSession() {
 		int numWords = Integer.valueOf(mNumWordsEditText.getText().toString());
-		ArrayList<SavedWord> wordsToReview = mDatabaseHelper.getListOfWordsToReview(numWords);
+		ArrayList<SavedWord> wordsToReview = new ArrayList<>();//mDatabaseHelper.getListOfWordsToReview(numWords);
 		return new ReviewWordsSession(wordsToReview, mDatabaseHelper);
 	}
 }

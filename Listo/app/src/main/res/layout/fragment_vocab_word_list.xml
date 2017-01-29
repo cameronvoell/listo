@@ -4,39 +4,33 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:orientation="horizontal">
+        android:padding="4dp">
+
+        <TextView
+            android:id="@+id/filterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textStyle="bold"
+            android:textSize="18dp"/>
 
         <Button
-            android:layout_width="0dp"
+            android:id="@+id/filterButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="sort"
-            android:onClick="sort"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
             android:text="filter"
             android:onClick="filter"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="custom"
-            android:onClick="custom"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="search"
-            android:onClick="search"/>
 
-    </LinearLayout>
+
+    </RelativeLayout>
 
 
     <ListView android:id="@id/android:list"
