@@ -14,6 +14,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:src="@drawable/ic_action_goleft"
+        android:tint="@android:color/black"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:onClick="close"/>
@@ -34,5 +35,6 @@
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_save"
+        android:tint="@android:color/black"
         android:onClick="captureWord"/>
 </RelativeLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorDarkSpain">#e60000</color>
-    <color name="colorLightSpain">#e6e600</color>
+    <color name="colorDarkSpain">#C84C42</color>
+    <color name="colorLightSpain">#F4EA79</color>
     <color name="colorLightTwoSpain">#f2f2f2</color>
     <color name="colorDarkColombia">#2B3043</color>
     <color name="colorLightColombia">#C84C42</color>
@@ -9,7 +9,7 @@
     <color name="colorDarkMexico">#267326</color>
     <color name="colorLightMexico">#C84C42</color>
     <color name="colorLightTwoMexico">#f2f2f2</color>
-    <color name="colorDarkArgentina">#00e6e6</color>
+    <color name="colorDarkArgentina">#00bfff</color>
     <color name="colorLightArgentina">#F4EA79</color>
     <color name="colorLightTwoArgentina">#f2f2f2</color>
 </resources>

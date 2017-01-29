@@ -3,7 +3,7 @@
 
     <item>
         <bitmap
-            android:src="@drawable/spain_bg" />
+            android:src="@drawable/argentina_bg" />
     </item>
 
 </layer-list>

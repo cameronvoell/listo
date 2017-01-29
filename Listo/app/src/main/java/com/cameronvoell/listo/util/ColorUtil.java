@@ -29,7 +29,7 @@ public class ColorUtil {
 
 	public ColorUtil(Context context) {
 		mContext = context;
-		mPreferences = mContext.getSharedPreferences(mContext.getString(R.string.listo_shared_preferences), 1);
+		mPreferences = mContext.getSharedPreferences(mContext.getString(R.string.listo_shared_preferences), 0);
 		mCurrentTheme = mPreferences.getInt(KEY_PREFERENCES_THEME, 0);
 	}
 

@@ -15,6 +15,7 @@ import android.widget.Button;
 
 import com.cameronvoell.listo.adapters.BaseTabAdapter;
 import com.cameronvoell.listo.R;
+import com.cameronvoell.listo.fragments.HomeFragment;
 import com.cameronvoell.listo.fragments.VerbsFragment;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.ui_widgets.SlidingTabLayout;
@@ -70,7 +71,21 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onPageSelected(int position) {
 				if (position == 2) {
-					((VerbsFragment)mAdapter.getItem(2)).updateBackgroundColor();
+					Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+					if (mViewPager.getCurrentItem() == 2 && page != null) {
+						((VerbsFragment)page).updateBackgroundColor();
+					}
+					mFab.show();
+				} else if (position == 3) {
+					mFab.hide();
+				} else if (position == 0) {
+					mFab.show();
+					Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+					if (mViewPager.getCurrentItem() == 0 && page != null) {
+						((HomeFragment)page).resetActionBoxes();
+					}
+				} else {
+					mFab.show();
 				}
 			}
 
@@ -128,5 +143,17 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 		mFab.setBackgroundTintList(ColorStateList.valueOf(new ColorUtil(getApplicationContext()).getLightColorResource()));
+	}
+
+	public void viewBackground(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 0 && page != null) {
+			mFab.hide();
+			((HomeFragment)page).viewBackground();
+		}
+	}
+
+	public void showFab() {
+		mFab.show();
 	}
 }
