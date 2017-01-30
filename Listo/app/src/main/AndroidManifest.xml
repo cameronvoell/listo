@@ -21,12 +21,13 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
         <activity android:name=".activities.EditSavedWordActivity"/>
-        <activity android:name=".activities.ReviewWordsActivity"/>
+        <activity android:name=".activities.ReviewWordsActivity"
+                  android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".activities.VerbConjugationsActivity"/>
         <activity android:name=".activities.PruneWordsActivity">
         </activity>
-        <activity android:name=".activities.VerbPracticeActivity">
-        </activity>
+        <activity android:name=".activities.VerbPracticeActivity"
+                  android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

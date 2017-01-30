@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tenseTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="36dp"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/mainPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="36dp"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:layout_below="@id/tenseTitle"/>
+
+    <EditText
+        android:id="@+id/sentenceEntry"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@android:color/white"
+        android:gravity="left|top"
+        android:textAlignment="gravity"
+        android:layout_below="@id/mainPrompt"
+        android:hint="Enter Sentence with correctly conjugated verb:"/>
+
+    <TextView
+        android:id="@+id/conjugation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:textColor="@android:color/holo_red_dark"
+        android:textAlignment="center"
+        android:visibility="gone"/>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="submit"
+        android:onClick="submitSentence"/>
+
+
+
+</RelativeLayout>

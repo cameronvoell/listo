@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:focusableInTouchMode="true"
                 android:background="@android:color/white">
 
@@ -14,10 +14,10 @@
         android:layout_marginBottom="36dp"
         android:gravity="center"
         android:textSize="32dp"
-        android:text="Review Configurator"/>
+        android:text="Verb Practice Configurator"/>
 
     <LinearLayout
-        android:id="@+id/numWordsLayout"
+        android:id="@+id/numSentencesLayout"
         android:layout_below="@id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,18 +26,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Num Words: "/>
+            android:text="Num sentences: "/>
 
         <EditText
-            android:id="@+id/numWords"
+            android:id="@+id/numSentences"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:text="6"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_below="@id/numWordsLayout"
+        android:layout_below="@id/numSentencesLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -45,21 +46,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Prioritize: "/>
+            android:text="Tense: "/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recently Added"
-            android:onClick="updateReviewWordsPrioritization"/>
+            android:text="Presente"
+            android:onClick="selectTenses"/>
 
     </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Launch Review Session"
-        android:onClick="launchReviewSession"
+        android:text="Launch Verb Practice"
+        android:onClick="launchVerbPractice"
         android:layout_alignParentBottom="true"
         android:layout_margin="32dp"/>
 

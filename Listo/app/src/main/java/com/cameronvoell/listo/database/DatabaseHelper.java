@@ -12,12 +12,18 @@ import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.model.FrequencyWord;
 import com.cameronvoell.listo.model.SavedWord;
+import com.cameronvoell.listo.model.VerbPracticeSession;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -1132,5 +1138,129 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 		db.close();
 		return numVerbs;
+	}
+
+	public ArrayList<VerbPracticeSession.VerbPracticePrompt> getVerbPracticeSessionPrompts(int mTense, int mNumSentences, int mNumDifferentVerbs) {
+		ArrayList<VerbPracticeSession.VerbPracticePrompt> verbPrompts = new ArrayList<>(mNumSentences);
+
+		HashMap<String, VerbConjugationRow> mVerbConjugationData = new HashMap<>(mNumSentences);
+
+		Integer[] possibleSubjects = {VerbPracticeSession.SUBJECT_YO,
+									  VerbPracticeSession.SUBJECT_TU,
+									  VerbPracticeSession.SUBJECT_USTED,
+									  VerbPracticeSession.SUBJECT_NOSOTROS,
+									  VerbPracticeSession.SUBJECT_VOSOTROS,
+									  VerbPracticeSession.SUBJECT_USTEDES};
+		List<Integer> possibleSubjectsList = Arrays.asList(possibleSubjects);
+		Collections.shuffle(possibleSubjectsList);
+
+		LinkedList<Integer> overflow = new LinkedList<>();
+		for (int num = 0; num < mNumSentences % 6; num++) {
+			overflow.add(possibleSubjectsList.get(num));
+		}
+		LinkedList<Integer> subjects = new LinkedList<>();
+		for (int num2 = 0; num2 < mNumSentences; num2++) {
+			subjects.add(num2 % 6);
+		}
+		subjects.addAll(overflow);
+		Collections.shuffle(subjects);
+
+		SQLiteDatabase db = this.getWritableDatabase();
+
+
+		Cursor v = db.rawQuery("SELECT * FROM " + TABLE_VERB_CONJUGATIONS, null);
+		HashSet<String> verbInfinitivos = new HashSet<>();
+		while (v.moveToNext()) {
+			 verbInfinitivos.add(convertCursorToVerbRowInfo(v).getInfinitivo());
+		}
+
+		//Collect SavedWord Data
+		String query = "SELECT * FROM " + TABLE_SAVED_WORDS
+				+ " WHERE " + KEY_TYPE + " =\"v\" AND "
+				+ KEY_MEMORY_STRENGTH + " > " + SavedWord.MEMORIZED_NOT_KNOWN;
+
+		Cursor c = db.rawQuery(query, null);
+		ArrayList<SavedWord> allVerbs = new ArrayList<>();
+		while (c.moveToNext()) {
+			SavedWord word = cursorToSavedWord(c);
+			if (verbInfinitivos.contains(word.getmWord()))
+				allVerbs.add(cursorToSavedWord(c));
+		}
+
+		Collections.shuffle(allVerbs);
+		ArrayList<SavedWord> chosenVerbs = new ArrayList<>(allVerbs.subList(0, mNumSentences));
+
+
+		//Collect Verb Conjugation data
+		String where = " WHERE ";
+		for (int i = 0; i < mNumSentences; i++) {
+			where += KEY_SPANISH_INFINITIVO + " = \"" + chosenVerbs.get(i).getmWord() + "\"";
+			if (i != mNumSentences - 1) where += " OR ";
+		}
+		Cursor c2 = db.rawQuery("SELECT * FROM " + TABLE_VERB_CONJUGATIONS + where, null);
+		while (c2.moveToNext()) {
+			VerbConjugationRow verbInfo = convertCursorToVerbRowInfo(c2);
+			mVerbConjugationData.put(verbInfo.getInfinitivo(), verbInfo);
+		}
+
+		db.close();
+		for (int j = 0; j < mNumSentences; j++) {
+			int subject = subjects.get(j);
+			SavedWord verb = chosenVerbs.get(j);
+			VerbConjugationRow conjugations = mVerbConjugationData.get(verb.getmWord());
+			HashSet<Integer> subjectsCovered = getSubjectsCoveredForVerbTense(verb.getmWord(), mTense, conjugations);
+			String conjugatedVerb = getConjugatedVerb(verb.getmWord(), subject, mTense, conjugations);
+			VerbPracticeSession.VerbPracticePrompt prompt = new VerbPracticeSession.VerbPracticePrompt(verb, conjugatedVerb, subject, mTense, subjectsCovered);
+			verbPrompts.add(prompt);
+		}
+
+
+		return verbPrompts;
+	}
+
+	private String getConjugatedVerb(String s, int subject, int mTense, VerbConjugationRow conjugations) {
+		switch (mTense) {
+			case VerbPracticeSession.TENSE_PRESENTE:
+				switch (subject) {
+					case VerbPracticeSession.SUBJECT_YO:
+						return conjugations.getIndicativePresentYo();
+					case VerbPracticeSession.SUBJECT_TU:
+						return conjugations.getIndicativePresentTu();
+					case VerbPracticeSession.SUBJECT_USTED:
+						return conjugations.getIndicativePresentEl();
+					case VerbPracticeSession.SUBJECT_NOSOTROS:
+						return conjugations.getIndicativePresentNos();
+					case VerbPracticeSession.SUBJECT_VOSOTROS:
+						return conjugations.getIndicativePresentVos();
+					case VerbPracticeSession.SUBJECT_USTEDES:
+						return conjugations.getIndicativePresentEllos();
+				}
+		}
+		return "not found";
+	}
+
+	private HashSet<Integer> getSubjectsCoveredForVerbTense(String verb, int mTense, VerbConjugationRow conjugations) {
+		HashSet<Integer> subjectsCovered = new HashSet<>();
+		try {
+			switch (mTense) {
+				case VerbPracticeSession.TENSE_PRESENTE:
+					if (conjugations.getIndicativePresentYo().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_YO);
+					if (conjugations.getIndicativePresentTu().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_TU);
+					if (conjugations.getIndicativePresentEl().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_USTED);
+					if (conjugations.getIndicativePresentNos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_NOSOTROS);
+					if (conjugations.getIndicativePresentVos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_VOSOTROS);
+					if (conjugations.getIndicativePresentEllos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_USTEDES);
+					break;
+			}
+		} catch (NullPointerException npe) {
+			Log.e("NULL", verb + " is missing for tense " + mTense);
+		}
+		return subjectsCovered;
 	}
 }
