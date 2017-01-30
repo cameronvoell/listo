@@ -19,6 +19,7 @@ import java.util.ArrayList;
  */
 public class ReviewWordsConfiguratorFragment extends Fragment {
 
+	private static final String PREF_NUM_REV_WORDS = "PREF_NUM_REV_WORDS";
 	EditText mNumWordsEditText;
 	DatabaseHelper mDatabaseHelper;
 
@@ -29,6 +30,8 @@ public class ReviewWordsConfiguratorFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_review_words_configurator, container, false);
 		mNumWordsEditText = (EditText) v.findViewById(R.id.numWords);
 
+		mNumWordsEditText.setText("" + getActivity().getSharedPreferences(getString(R.string.listo_shared_preferences),0).getInt(PREF_NUM_REV_WORDS, 10));
+
 		return v;
 	}
 
@@ -36,13 +39,14 @@ public class ReviewWordsConfiguratorFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mDatabaseHelper = new DatabaseHelper(getContext());
+		mDatabaseHelper = new DatabaseHelper(getActivity());
 
 
 	}
 
 	public ReviewWordsSession createReviewWordsSession() {
 		int numWords = Integer.valueOf(mNumWordsEditText.getText().toString());
+		getActivity().getSharedPreferences(getString(R.string.listo_shared_preferences),0).edit().putInt(PREF_NUM_REV_WORDS, numWords).apply();
 		ArrayList<SavedWord> wordsToReview = mDatabaseHelper.getListOfWordsToReview(numWords);
 		return new ReviewWordsSession(wordsToReview, mDatabaseHelper);
 	}

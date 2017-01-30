@@ -25,6 +25,8 @@
         <activity android:name=".activities.VerbConjugationsActivity"/>
         <activity android:name=".activities.PruneWordsActivity">
         </activity>
+        <activity android:name=".activities.VerbPracticeActivity">
+        </activity>
     </application>
 
 </manifest>
