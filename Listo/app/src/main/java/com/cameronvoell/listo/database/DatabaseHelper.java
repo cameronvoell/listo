@@ -1053,8 +1053,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put(KEY_PRUNED, 1);
 		values.put(KEY_MANUALLY_ADDED, savedWord.ismIsManuallyAdded());
 
-		String WHERE = KEY_TYPE + "=\"" + savedWord.getmType() + "\" AND "
-					 + KEY_SPANISH_WORD + "=\"" + savedWord.getmWord() + "\"";
+//		String WHERE = KEY_TYPE + "=\"" + savedWord.getmType() + "\" AND "
+//					 + KEY_SPANISH_WORD + "=\"" + savedWord.getmWord() + "\"";
 
 		db.insertWithOnConflict(TABLE_SAVED_WORDS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
 

@@ -95,7 +95,7 @@ public class HomeFragment extends Fragment {
         int numSavedNotYetMemorized = helper.getNumWordsNotYetMemorized();
         int numWordsAwaitingSentencePractice = helper.getNumWordsMemorized();
 
-        String text = "<font color=#C84C42>" + numPruned + "</font><font color=#333333>/5000 words pruned</font>";
+        String text = "<font color=#C84C42>" + numPruned + "</font><font color=#333333>/5000 words screened</font>";
         mNumberWordsSavedView.setText(Html.fromHtml(text));
 
         String text2 = "<font color=#C84C42>" + numSavedNotYetMemorized + "</font><font color=#333333> words awaiting memorization</font>";

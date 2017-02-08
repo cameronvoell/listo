@@ -56,8 +56,6 @@ public class PruneWordsActivity extends AppCompatActivity {
 				SavedWord word = (SavedWord)dataObject;
 				word.setmMemoryStrength(SavedWord.MEMORIZED_NOT_KNOWN);
 				mDatabaseHelper.updatePrunedWord(word);
-
-				//Toast.makeText(PruneWordsActivity.this, "Left!", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -65,8 +63,6 @@ public class PruneWordsActivity extends AppCompatActivity {
 				SavedWord word = (SavedWord)dataObject;
 				word.setmMemoryStrength(SavedWord.MEMORIZED_MEANING_KNOWN);
 				mDatabaseHelper.updatePrunedWord(word);
-
-				//Toast.makeText(PruneWordsActivity.this, "Right!", Toast.LENGTH_SHORT).show();
 			}
 
 			@Override

@@ -12,8 +12,13 @@ import android.widget.Toast;
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.model.VerbPracticeSession;
 import com.cameronvoell.listo.util.ColorUtil;
+import com.cameronvoell.listo.util.PrefUtil;
 
 import org.w3c.dom.Text;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by cameronvoell on 1/30/17.
@@ -28,6 +33,7 @@ public class VerbPromptFragment extends Fragment{
 	private TextView mTenseTitleTextView;
 	private EditText mSentenceEntry;
 	private TextView mConjugationTextView;
+	private int mAttempts = 0;
 
 
 	@Override
@@ -94,8 +100,19 @@ public class VerbPromptFragment extends Fragment{
 		String sentence = mSentenceEntry.getText().toString();
 		if (sentence.contains(mVerbPracticePrompt.getCorrectConjugation())) {
 			Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
+			if (mAttempts == 0) {
+				Set<String> verbs = PrefUtil.getStringSetPref(getActivity(),
+						PrefUtil.PREF_VERBS_PRACTICED_PRESENT);
+				if (!verbs.contains(mVerbPracticePrompt.getmWord().getmWord())) {
+					Set<String> copy = new HashSet();
+					copy.addAll(verbs);
+					copy.add(mVerbPracticePrompt.getmWord().getmWord());
+					PrefUtil.updateStringSetPref(getActivity(), PrefUtil.PREF_VERBS_PRACTICED_PRESENT, copy);
+				}
+			}
 			return true;
 		} else {
+			mAttempts++;
 			Toast.makeText(getActivity(), "Incorrect!", Toast.LENGTH_SHORT).show();
 			mConjugationTextView.setVisibility(View.VISIBLE);
 			return false;
