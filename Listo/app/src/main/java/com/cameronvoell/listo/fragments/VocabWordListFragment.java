@@ -173,9 +173,11 @@ public class VocabWordListFragment extends ListFragment {
 
     public void filter() {
         if (mFiltered) {
-            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursor(mFilterOption)));
+            setListAdapter(new SavedWordCursorAdapter(getContext(),
+                    new DatabaseHelper(getContext()).getSavedWordsCursor(mFilterOption)));
         } else {
-            setListAdapter(new SavedWordCursorAdapter(getContext(), new DatabaseHelper(getContext()).getSavedWordsCursorFilteredByNotMemorized()));
+            setListAdapter(new SavedWordCursorAdapter(getContext(),
+                    new DatabaseHelper(getContext()).getSavedWordsCursorFilteredByNotMemorized()));
         }
         mFiltered = !mFiltered;
     }

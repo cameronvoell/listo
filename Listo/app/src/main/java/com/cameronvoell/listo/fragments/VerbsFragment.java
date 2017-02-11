@@ -4,12 +4,17 @@ package com.cameronvoell.listo.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.database.DatabaseHelper;
@@ -27,6 +32,8 @@ public class VerbsFragment extends Fragment {
 
     private RelativeLayout rLayout1;
     private RelativeLayout rLayout2;
+
+    private EditText mVerbSearchEditText;
 
     public static VerbsFragment newInstance() {
         VerbsFragment fragment = new VerbsFragment();
@@ -54,6 +61,19 @@ public class VerbsFragment extends Fragment {
         rLayout1 = (RelativeLayout)v.findViewById(R.id.verbs_reviewed_layout);
         rLayout2 = (RelativeLayout)v.findViewById(R.id.tenses_mastered_layout);
 
+        mVerbSearchEditText = (EditText)v.findViewById(R.id.search_verb_entry);
+        mVerbSearchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                //Toast.makeText(getContext(), mVerbSearchEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                //new DatabaseHelper(getContext()).searchForVerb();
+            }
+        });
+
         updateBackgroundColor();
 
         return v;
@@ -80,7 +100,7 @@ public class VerbsFragment extends Fragment {
             String text = "<font color=#C84C42>" + numVerbsReviewed + "</font><font color=#333333>/" + numVerbsTotal + " verbs reviewed</font>";
             mVerbsReviewedTextView.setText(Html.fromHtml(text));
 
-            String text2 = "<font color=#C84C42>" + numVerbsPracticed + "</font><font color=#333333> different verbs conjugated successfully</font>";
+            String text2 = "<font color=#C84C42>" + numVerbsPracticed + "</font><font color=#333333> verbs conjugated successfully</font>";
             mTensesMasteredTextView.setText(Html.fromHtml(text2));
         }
     }

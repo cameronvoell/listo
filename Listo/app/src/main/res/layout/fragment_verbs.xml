@@ -65,4 +65,28 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/search_verb_entry_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_below="@id/tenses_mastered_layout">
+
+        <EditText
+            android:id="@+id/search_verb_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_margin="8dp"
+            android:textSize="18dp"
+            android:hint="search for a verb"
+            android:textColor="@android:color/black"/>
+
+    </RelativeLayout>
+
+
+
 </RelativeLayout>

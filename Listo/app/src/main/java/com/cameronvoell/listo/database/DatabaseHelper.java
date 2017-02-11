@@ -36,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	Context mContext;
 
 	//Used for upgrading the database
-	private static final int DATABASE_VERSION = 21;
+	private static final int DATABASE_VERSION = 22;
 
 	//name of our database file
 	private static final String DATABASE_NAME = "listo_database";
@@ -687,7 +687,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(KEY_FREQ_PRUNED, 0);
 			db.insert(TABLE_FREQUENCY, null, values);
 		}
-		db.close();
 	}
 
 	private void initiateVerbConjugationsTableFromText(Context mContext, SQLiteDatabase db) {
