@@ -5,9 +5,11 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.cameronvoell.listo.R;
+import com.cameronvoell.listo.database.DatabaseHelper;
 import com.cameronvoell.listo.model.SavedWord;
 import com.cameronvoell.listo.util.ColorUtil;
 
@@ -22,6 +24,8 @@ public class ReviewCardPromptFragment extends Fragment {
 	private SavedWord mSavedWord;
 
 	private TextView mMainPromptTextView;
+	private Button mShowSentenceButton;
+	private TextView mSentenceHintTextView;
 
 
 	@Override
@@ -34,9 +38,24 @@ public class ReviewCardPromptFragment extends Fragment {
 		v.setBackground(new ColorUtil(getActivity()).getDarkColorDrawable());
 		mMainPromptTextView.setTextColor(new ColorUtil(getActivity()).getLightColorTwoResource());
 
+		mShowSentenceButton = (Button) v.findViewById(R.id.showSentence);
+		mSentenceHintTextView = (TextView)v.findViewById(R.id.sentenceHint);
+
 		Bundle args = getArguments();
 		mSavedWord = args.getParcelable(KEY_SAVED_WORD);
 		mMainPromptTextView.setText(mSavedWord.getmEng());
+
+		if (mSavedWord.getmNumSentences() > 0) {
+			mShowSentenceButton.setVisibility(View.VISIBLE);
+		}
+		mShowSentenceButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mSentenceHintTextView.setVisibility(View.VISIBLE);
+				mShowSentenceButton.setVisibility(View.GONE);
+				mSentenceHintTextView.setText(new DatabaseHelper(getActivity()).getSentenceText(mSavedWord).getStylizedSentence());
+			}
+		});
 
 		return v;
 	}

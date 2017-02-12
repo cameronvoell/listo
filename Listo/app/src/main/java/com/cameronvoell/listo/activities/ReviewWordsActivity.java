@@ -95,4 +95,8 @@ public class ReviewWordsActivity extends AppCompatActivity {
 			finish();
 		}
 	}
+
+	public void showSentence(View view) {
+
+	}
 }

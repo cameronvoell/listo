@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/mainPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="36dp"
+        android:textAlignment="center"
+        android:textSize="32sp"/>
+
+    <Button
+        android:id="@+id/showWord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mainPrompt"
+        android:layout_alignParentLeft="true"
+        android:text="Show word =>"/>
+
+    <TextView
+        android:id="@+id/wordAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mainPrompt"
+        android:textColor="@android:color/white"
+        android:textSize="36dp"
+        android:visibility="gone"
+        android:layout_marginLeft="36dp"
+        android:layout_toRightOf="@id/showWord"/>
+
+    <EditText
+        android:id="@+id/sentenceEntry"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@android:color/white"
+        android:gravity="left|top"
+        android:textAlignment="gravity"
+        android:layout_below="@id/showWord"
+        android:layout_marginTop="32dp"
+        android:inputType="textCapSentences"
+        android:textSize="24dp"
+        android:hint="Enter Sentence with correctly conjugated verb:"/>
+
+    <TextView
+        android:id="@+id/sentenceReadyToSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:layout_below="@id/showWord"
+        android:layout_marginTop="32dp"
+        android:textAlignment="center"
+        android:textSize="24dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/doneEditingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sentenceEntry"
+        android:layout_centerHorizontal="true"
+        android:text="DONE"/>
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Save Sentence"
+        android:enabled="false"
+        android:onClick="submitSentence"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Sent Back to Review"
+        android:onClick="updateNeedsReview"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="skip"
+        android:onClick="skip"/>
+
+
+
+</RelativeLayout>

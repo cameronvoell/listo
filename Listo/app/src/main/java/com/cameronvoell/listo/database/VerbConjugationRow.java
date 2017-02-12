@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by cameronvoell on 12/10/15.
  */
-public class VerbConjugationRow implements Parcelable{
+public class VerbConjugationRow implements Parcelable {
 
     private String infinitivo;
     private String infinitivoIngles;

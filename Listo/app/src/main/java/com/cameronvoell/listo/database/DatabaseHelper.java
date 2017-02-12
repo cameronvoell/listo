@@ -13,6 +13,7 @@ import com.cameronvoell.listo.fragments.VerbPracticeConfiguratorFragment;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.model.FrequencyWord;
 import com.cameronvoell.listo.model.SavedWord;
+import com.cameronvoell.listo.model.SentenceRow;
 import com.cameronvoell.listo.model.VerbPracticeSession;
 
 import java.text.ParseException;
@@ -37,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	Context mContext;
 
 	//Used for upgrading the database
-	private static final int DATABASE_VERSION = 22;
+	private static final int DATABASE_VERSION = 27;
 
 	//name of our database file
 	private static final String DATABASE_NAME = "listo_database";
@@ -78,6 +79,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final String KEY_NUM_TIMES_INCORRECT = "num_times_incorrect";
 	public static final String KEY_PRUNED = "pruned";
 	public static final String KEY_MANUALLY_ADDED = "manually_added";
+	public static final String KEY_SENTENCE_ID = "sentence_id";
+	public static final String KEY_NUM_SENTENCES_SAVED = "num_sentences_saved";
+	public static final String KEY_SKIP_SENTENCE_PRACTICE = "skip_sentence_practice";
 
 
 	public static final String TABLE_SAVED_WORDS = "saved_words";
@@ -98,8 +102,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				+ KEY_NUM_TIMES_INCORRECT + " INTEGER,"
 				+ KEY_PRUNED + " INTEGER,"
 				+ KEY_MANUALLY_ADDED + " INTEGER, "
+				+ KEY_SENTENCE_ID + " TEXT, "
+				+ KEY_NUM_SENTENCES_SAVED + " INTEGER, "
+				+ KEY_SKIP_SENTENCE_PRACTICE + " INTEGER, "
 				+ "UNIQUE(" + KEY_SPANISH_WORD + ", " + KEY_ENG_DEF + ") ON CONFLICT REPLACE"
 			+ ")";
+
+	//Sentence Database Helper Strings
+	public static final String KEY_SENTENCE_WORD_ID = "sentence_word_id";
+	public static final String KEY_SENTENCE_TEXT = "sentence_text";
+	public static final String KEY_SENTENCE_WORD = "sentence_word";
+	public static final String KEY_SENTENCE_WORD_LOCATION = "sentence_word_location";
+	public static final String KEY_SENTENCE_ENG = "sentence_eng";
+	public static final String KEY_SENTENCE_STARRED = "sentence_starred";
+	public static final String KEY_SENTENCE_CAPTURED_DATE = "sentence_captured_date";
+	public static final String KEY_SENTENCE_VERB_TENSE = "sentence_verb_tense";
+
+
+	public static final String TABLE_SENTENCES = "sentences";
+
+	private static final String CREATE_SENTENCES_TABLE = "CREATE TABLE " + TABLE_SENTENCES
+			+ "(" + KEY_ID + " INTEGER PRIMARY KEY, "
+			+ KEY_SENTENCE_WORD_ID + " TEXT, "
+			+ KEY_SENTENCE_TEXT + " TEXT, "
+			+ KEY_SENTENCE_WORD + " TEXT, "
+			+ KEY_SENTENCE_WORD_LOCATION + " INTEGER, "
+			+ KEY_SENTENCE_ENG + " TEXT, "
+			+ KEY_SENTENCE_STARRED + " INTEGER, "
+			+ KEY_SENTENCE_CAPTURED_DATE + " DATETIME, "
+			+ KEY_SENTENCE_VERB_TENSE + " INTEGER)";
 
 	//Verb Conjugation Database Helper Strings
 	public static final String KEY_SPANISH_INFINITIVO = "KEY_SPANISH_INFINITIVO";
@@ -386,10 +417,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_FREQUENCY);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SAVED_WORDS);
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_VERB_CONJUGATIONS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SENTENCES);
 
 		db.execSQL(CREATE_FREQUENCY_TABLE);
 		db.execSQL(CREATE_SAVED_WORDS_TABLE);
 		db.execSQL(CREATE_VERB_CONJUGATIONS_TABLE);
+		db.execSQL(CREATE_SENTENCES_TABLE);
 
 		initiateFrequencyTableFromText(mContext, db);
 		initiateVerbConjugationsTableFromText(mContext, db);
@@ -463,12 +496,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		int numTimesIncorrect = c.getInt(c.getColumnIndex(KEY_NUM_TIMES_INCORRECT));
 		boolean isPruned = c.getInt(c.getColumnIndex(KEY_PRUNED)) == 1;
 		boolean isManuallyAdded = c.getInt(c.getColumnIndex(KEY_MANUALLY_ADDED)) == 1;
+		String sentenceID = c.getString(c.getColumnIndex(KEY_SENTENCE_ID));
+		int numSentence = c.getInt(c.getColumnIndex(KEY_NUM_SENTENCES_SAVED));
+		boolean skipSentencePractice = c.getInt(c.getColumnIndex(KEY_SKIP_SENTENCE_PRACTICE)) == 1;
 
 
 		SavedWord word = new SavedWord(spanishWord, englishDef, frequency, date, type, example, hint,
 										isMemorized, memoryStrength, lastReviewedDate, numTimesReviewed,
-										numTimesIncorrect, isPruned, isManuallyAdded);
+										numTimesIncorrect, isPruned, isManuallyAdded, sentenceID, numSentence, skipSentencePractice);
 		return word;
+	}
+
+	private SentenceRow cursorToSentenceRow(Cursor c) {
+		String id = c.getString(c.getColumnIndex(KEY_SENTENCE_WORD_ID));
+		String text = c.getString(c.getColumnIndex(KEY_SENTENCE_TEXT));
+		String word = c.getString(c.getColumnIndex(KEY_SENTENCE_WORD));
+		int wordLocation = c.getInt(c.getColumnIndex(KEY_SENTENCE_WORD_LOCATION));
+		String eng = c.getString(c.getColumnIndex(KEY_SENTENCE_ENG));
+		boolean starred = c.getInt(c.getColumnIndex(KEY_SENTENCE_STARRED)) == 1;
+		String capturedDate = c.getString(c.getColumnIndex(KEY_SENTENCE_CAPTURED_DATE));
+		int verbTense = c.getInt(c.getColumnIndex(KEY_SENTENCE_VERB_TENSE));
+
+
+		return new SentenceRow(id, text, word, wordLocation, eng, starred, capturedDate, verbTense);
 	}
 
 	public void saveVocabWordManually(String spanishWord, String englishDef, String wordType, int freq) {
@@ -492,6 +542,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put(KEY_NUM_TIMES_INCORRECT, 0);
 		values.put(KEY_PRUNED, 0);
 		values.put(KEY_MANUALLY_ADDED, 1);
+		values.put(KEY_SENTENCE_ID, spanishWord.concat(englishDef));
+		values.put(KEY_NUM_SENTENCES_SAVED, 0);
+		values.put(KEY_SKIP_SENTENCE_PRACTICE, 0);
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.insert(TABLE_SAVED_WORDS, null, values);
@@ -653,7 +706,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private SavedWord frequencyWordToSavedWord(FrequencyWord frequencyWord, String date) {
 		return new SavedWord(frequencyWord.getmWord(), frequencyWord.getmEng(),
 				frequencyWord.getmFrequency(), date, frequencyWord.getmType(), "", "",
-				false, 0, "", 0, 0, false, false);
+				false, 0, "", 0, 0, false, false, frequencyWord.getmWord().concat(frequencyWord.getmEng()), 0, false);
 	}
 
 	public void updateWordReviewData(SavedWord savedWord, Integer attemptsNeeded) {
@@ -680,6 +733,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put(KEY_LAST_REVIEWED_DATE, reviewedDateFormatted);
 		values.put(KEY_PRUNED, true);
 		values.put(KEY_MANUALLY_ADDED, savedWord.ismIsManuallyAdded());
+		values.put(KEY_SENTENCE_ID, savedWord.getmSentenceId());
+		values.put(KEY_NUM_SENTENCES_SAVED, savedWord.getmNumSentences());
+		values.put(KEY_SKIP_SENTENCE_PRACTICE, savedWord.ismSkipSentencePractice());
 		String WHERE = KEY_SPANISH_WORD + "=\"" + savedWord.getmWord() + "\"";
 		db.update(TABLE_SAVED_WORDS, values, WHERE, null);
 		db.close();
@@ -700,11 +756,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put(KEY_ADDED_DATE, savedWord.getmAddedDate());
 		values.put(KEY_EXAMPLE, savedWord.getmExample());
 		values.put(KEY_HINT, savedWord.getmHint());
-		values.put(KEY_MEMORIZED, 1);
+		values.put(KEY_MEMORIZED, 0);
 		values.put(KEY_MEMORY_STRENGTH, savedWord.getmMemoryStrength());
 		values.put(KEY_NUM_TIMES_REVIEWED, savedWord.getmNumTimesReviewed() + 1);
 		values.put(KEY_NUM_TIMES_INCORRECT, savedWord.getmNumTimesIncorrect() + attemptsNeeded - 1);
 		values.put(KEY_LAST_REVIEWED_DATE, reviewedDateFormatted);
+		values.put(KEY_PRUNED, true);
+		values.put(KEY_MANUALLY_ADDED, savedWord.ismIsManuallyAdded());
+		values.put(KEY_SENTENCE_ID, savedWord.getmSentenceId());
+		values.put(KEY_NUM_SENTENCES_SAVED, savedWord.getmNumSentences());
+		values.put(KEY_SKIP_SENTENCE_PRACTICE, savedWord.ismSkipSentencePractice() ? 1 : 0);
 		String WHERE = KEY_SPANISH_WORD + "=\"" + savedWord.getmWord() + "\"";
 		db.update(TABLE_SAVED_WORDS, values, WHERE, null);
 		db.close();
@@ -1108,6 +1169,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		values.put(KEY_LAST_REVIEWED_DATE, reviewedDateFormatted);
 		values.put(KEY_PRUNED, 1);
 		values.put(KEY_MANUALLY_ADDED, savedWord.ismIsManuallyAdded());
+		values.put(KEY_SENTENCE_ID, savedWord.getmSentenceId());
+		values.put(KEY_NUM_SENTENCES_SAVED, savedWord.getmNumSentences());
+		values.put(KEY_SKIP_SENTENCE_PRACTICE, savedWord.ismSkipSentencePractice() ? 1 : 0);
 
 //		String WHERE = KEY_TYPE + "=\"" + savedWord.getmType() + "\" AND "
 //					 + KEY_SPANISH_WORD + "=\"" + savedWord.getmWord() + "\"";
@@ -1379,5 +1443,104 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			Log.e("NULL", verb + " is missing for tense " + mTense);
 		}
 		return subjectsCovered;
+	}
+
+	//These are words that we got on our first try the last time we reviewed them
+	//We also want to rank them by how many times we have gotten them wrong, and
+	//by how frequent they are, and if we have already made a sentence for them
+	public ArrayList<SavedWord> getListOfWordsToPractice(int numSentences) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String query = "SELECT * FROM " + TABLE_SAVED_WORDS
+				+ " WHERE " + KEY_MEMORY_STRENGTH + " = " + String.valueOf(SavedWord.MEMORIZED_MEANING_KNOWN)
+				+ " AND " + KEY_SKIP_SENTENCE_PRACTICE + " <> 1"
+				+ " ORDER BY " + KEY_NUM_TIMES_INCORRECT + " ASC, "
+				+ KEY_NUM_SENTENCES_SAVED + " ASC, "
+				+ KEY_FREQ + " ASC";
+
+		Cursor c = db.rawQuery(query, null);
+		ArrayList<SavedWord> allWords = new ArrayList<>();
+		while (c.moveToNext()) {
+			allWords.add(cursorToSavedWord(c));
+		}
+
+		Collections.shuffle(allWords);
+		db.close();
+
+		return allWords.size() < numSentences ? allWords : new ArrayList<>(allWords.subList(0, numSentences));
+	}
+
+	public void addNewSentence(SavedWord word, String sentenceContent, int wordLocation) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		Date date = new Date();
+		String addedDate = dateFormat.format(date);
+
+		ContentValues values = new ContentValues();
+		values.put(KEY_SENTENCE_WORD_ID, word.getmWord().concat(word.getmEng()));
+		values.put(KEY_SENTENCE_TEXT, sentenceContent);
+		values.put(KEY_SENTENCE_WORD, word.getmWord());
+		values.put(KEY_SENTENCE_WORD_LOCATION, wordLocation);
+		values.put(KEY_SENTENCE_ENG, "");
+		values.put(KEY_SENTENCE_STARRED, 0);
+		values.put(KEY_SENTENCE_CAPTURED_DATE, addedDate);
+		values.put(KEY_SENTENCE_VERB_TENSE, -1);
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.insert(TABLE_SENTENCES, null, values);
+		word.setmNumSentences(word.getmNumSentences() + 1);
+		updateWordReviewData(word, 1);
+		db.close();
+	}
+
+	public void skipWordInSentencePractice(SavedWord savedWord) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		Date reviewedDate = new Date();
+		String reviewedDateFormatted = dateFormat.format(reviewedDate);
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(KEY_SPANISH_WORD, savedWord.getmWord());
+		values.put(KEY_ENG_DEF, savedWord.getmEng());
+		values.put(KEY_TYPE, savedWord.getmType());
+		values.put(KEY_FREQ, savedWord.getmFrequency());
+		values.put(KEY_ADDED_DATE, savedWord.getmAddedDate());
+		values.put(KEY_EXAMPLE, savedWord.getmExample());
+		values.put(KEY_HINT, savedWord.getmHint());
+		values.put(KEY_MEMORIZED, savedWord.ismIsMemorized() ? 1 : 0);
+		values.put(KEY_MEMORY_STRENGTH, savedWord.getmMemoryStrength());
+		values.put(KEY_NUM_TIMES_REVIEWED, savedWord.getmNumTimesReviewed() + 1);
+		values.put(KEY_NUM_TIMES_INCORRECT, savedWord.getmNumTimesIncorrect());
+		values.put(KEY_LAST_REVIEWED_DATE, reviewedDateFormatted);
+		values.put(KEY_PRUNED, true);
+		values.put(KEY_MANUALLY_ADDED, savedWord.ismIsManuallyAdded());
+		values.put(KEY_SENTENCE_ID, savedWord.getmSentenceId());
+		values.put(KEY_NUM_SENTENCES_SAVED, savedWord.getmNumSentences());
+		values.put(KEY_SKIP_SENTENCE_PRACTICE, 1);
+
+		String WHERE = KEY_SENTENCE_ID + "=\"" + savedWord.getmSentenceId() + "\"";
+
+		db.update(TABLE_SAVED_WORDS, values, WHERE, null);
+		db.close();
+	}
+
+	public SentenceRow getSentenceText(SavedWord mSavedWord) {
+
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String query = "SELECT * FROM " + TABLE_SENTENCES
+				+ " WHERE " + KEY_SENTENCE_WORD_ID + " = \"" + mSavedWord.getmSentenceId() + "\""
+				+ " ORDER BY " + KEY_SENTENCE_CAPTURED_DATE + " DESC";
+
+		Cursor c = db.rawQuery(query, null);
+		SentenceRow sentenceRow = null;
+		while (c.moveToNext()) {
+			sentenceRow = cursorToSentenceRow(c);
+		}
+
+		db.close();
+
+		return sentenceRow;
 	}
 }

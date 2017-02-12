@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 	public static final int RESULT_CODE_PRUNING_SESSION = 1;
 	public static final int RESULT_CODE_REVIEW_SESSION = 2;
 	public static final int RESULT_CODE_VERB_PRACTICE = 3;
+	public static final int RESULT_CODE_SENTENCE_PRACTICE = 3;
 
 	ViewPager mViewPager;
 	BaseTabAdapter mAdapter;
@@ -208,5 +209,10 @@ public class MainActivity extends AppCompatActivity {
 			mFab.hide();
 			((VerbsFragment)page).searchVerbs();
 		}
+	}
+
+	public void goToSentencePractice(View view) {
+		startActivityForResult(new Intent(getApplicationContext(), SentencePracticeActivity.class),
+				RESULT_CODE_SENTENCE_PRACTICE);
 	}
 }

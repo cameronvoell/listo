@@ -58,7 +58,7 @@ public class ReviewWordsSession {
 	public void setCurrentCardMemorized() {
 		mWordsFinished.add(mCurrentCard);
 		mNumAttempts.put(mCurrentCard, mNumAttempts.get(mCurrentCard) + 1);
-		mDatabaseHelper.updateWordReviewDataMemorized(mReviewWords.get(mCurrentCard), mNumAttempts.get(mCurrentCard));
+		mDatabaseHelper.updateWordReviewDataMemorized(getCurrentSavedWord(), mNumAttempts.get(mCurrentCard));
 		if (!isFinished()) {
 			iterateUntilNextCard();
 		}

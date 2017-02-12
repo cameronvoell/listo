@@ -2,6 +2,7 @@ package com.cameronvoell.listo.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Spanned;
 
 /**
  * Created by cameronvoell on 1/15/17.
@@ -27,11 +28,15 @@ public class SavedWord implements Parcelable {
 	private int mNumTimesIncorrect;
 	private boolean mIsPruned;
 	private boolean mIsManuallyAdded;
+	private String mSentenceId;
+	private int mNumSentences;
+	private boolean mSkipSentencePractice;
 
 	public SavedWord(String spanish, String eng, int frequency, String addedDate, String type,
 					 String example, String hint, boolean isMemorized, int memoryStrength,
 					 String lastReviewedDate, int numTimesReviewed, int numTimesIncorrect,
-					 boolean isPruned, boolean isManuallyAdded) {
+					 boolean isPruned, boolean isManuallyAdded, String sentenceId, int numSentences,
+					 boolean skipSentencePractice) {
 		mWord = spanish;
 		mEng = eng;
 		mFrequency = frequency;
@@ -46,6 +51,9 @@ public class SavedWord implements Parcelable {
 		mNumTimesIncorrect = numTimesIncorrect;
 		mIsPruned = isPruned;
 		mIsManuallyAdded = isManuallyAdded;
+		mSentenceId = sentenceId;
+		mNumSentences = numSentences;
+		mSkipSentencePractice = skipSentencePractice;
 	}
 
 	public String getmWord() {
@@ -177,6 +185,9 @@ public class SavedWord implements Parcelable {
 		mNumTimesIncorrect = in.readInt();
 		mIsPruned = in.readByte() != 0;
 		mIsManuallyAdded = in.readByte() != 0;
+		mSentenceId = in.readString();
+		mNumSentences = in.readInt();
+		mSkipSentencePractice = in.readByte() != 0;
 	}
 
 	public static final Creator<SavedWord> CREATOR = new Creator<SavedWord>() {
@@ -212,6 +223,9 @@ public class SavedWord implements Parcelable {
 		dest.writeInt(mNumTimesIncorrect);
 		dest.writeByte((byte)(mIsPruned ? 1 : 0));
 		dest.writeByte((byte)(mIsManuallyAdded ? 1 : 0));
+		dest.writeString(mSentenceId);
+		dest.writeInt(mNumSentences);
+		dest.writeByte((byte)(mSkipSentencePractice ? 1 : 0));
 	}
 
 	@Override
@@ -219,5 +233,28 @@ public class SavedWord implements Parcelable {
 		return mWord;
 	}
 
+	public String getmSentenceId() {
+		return mSentenceId;
+	}
+
+	public void setmSentenceId(String mSentenceId) {
+		this.mSentenceId = mSentenceId;
+	}
+
+	public int getmNumSentences() {
+		return mNumSentences;
+	}
+
+	public void setmNumSentences(int mNumSentences) {
+		this.mNumSentences = mNumSentences;
+	}
+
+	public boolean ismSkipSentencePractice() {
+		return mSkipSentencePractice;
+	}
+
+	public void setmSkipSentencePractice(boolean mSkipSentencePractice) {
+		this.mSkipSentencePractice = mSkipSentencePractice;
+	}
 }
 
