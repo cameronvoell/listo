@@ -29,10 +29,6 @@ public class VerbPracticeActivity extends AppCompatActivity {
 
 	}
 
-	public void selectTenses(View view) {
-
-	}
-
 	public void launchVerbPractice(View view) {
 		mSession = mConfiguratorFragment.createVerbPracticeSession();
 

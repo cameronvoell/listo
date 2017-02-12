@@ -49,10 +49,10 @@
             android:text="Tense: "/>
 
         <Button
+            android:id="@+id/selectTenseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Presente"
-            android:onClick="selectTenses"/>
+            android:text="Presente"/>
 
     </LinearLayout>
 

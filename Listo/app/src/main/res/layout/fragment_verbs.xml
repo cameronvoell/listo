@@ -68,7 +68,7 @@
     <RelativeLayout
         android:id="@+id/search_verb_entry_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="54dp"
         android:background="@android:color/darker_gray"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -78,15 +78,30 @@
         <EditText
             android:id="@+id/search_verb_entry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@android:color/white"
             android:layout_margin="8dp"
-            android:textSize="18dp"
+            android:textSize="32dp"
             android:hint="search for a verb"
+            android:layout_toLeftOf="@+id/searchVerbsButton"
             android:textColor="@android:color/black"/>
+
+        <ImageButton
+            android:id="@+id/searchVerbsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@android:drawable/ic_menu_search"
+            android:onClick="searchVerbs"/>
 
     </RelativeLayout>
 
-
+    <com.cameronvoell.listo.views.VerbConjugationsView
+        android:id="@+id/verbConjugationInfo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_verb_entry_layout"
+        android:visibility="gone"/>
 
 </RelativeLayout>

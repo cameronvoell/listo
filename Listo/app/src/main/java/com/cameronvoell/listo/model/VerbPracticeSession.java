@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.database.DatabaseHelper;
+import com.cameronvoell.listo.fragments.VerbPracticeConfiguratorFragment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,8 +17,8 @@ import java.util.HashSet;
 public class VerbPracticeSession {
 
 	private static final String PREF_NUM_WORDS_MOSTLY_COVERED_PRESENTE = "PREF_NUM_WORDS_MOSTLY_COVERED_PRESENTE";
-
-	public static final int TENSE_PRESENTE = 0;
+	private static final String PREF_NUM_WORDS_MOSTLY_COVERED_PRETERITO = "PREF_NUM_WORDS_MOSTLY_COVERED_PRETERITO";
+	private static final String PREF_NUM_WORDS_MOSTLY_COVERED_IMPERFECTO = "PREF_NUM_WORDS_MOSTLY_COVERED_IMPERFECTO";
 
 	public static final int SUBJECT_YO = 0;
 	public static final int SUBJECT_TU = 1;
@@ -26,7 +27,7 @@ public class VerbPracticeSession {
 	public static final int SUBJECT_VOSOTROS = 4;
 	public static final int SUBJECT_USTEDES = 5;
 
-	private int mTense = TENSE_PRESENTE;
+	private int mTense = VerbPracticeConfiguratorFragment.TENSE_OPTION_PRESENTE;
 	private int mNumSentences;
 	private int mNumDifferentVerbs = 6;
 	public ArrayList<VerbPracticePrompt> mVerbPracticePrompts;
@@ -41,13 +42,24 @@ public class VerbPracticeSession {
 	public VerbPracticeSession(int numSentences, DatabaseHelper databaseHelper, int tense, Context context) {
 		mNumSentences = numSentences;
 		mDatabaseHelper = databaseHelper;
-		mVerbPracticePrompts = mDatabaseHelper.getVerbPracticeSessionPrompts(mTense, mNumSentences, mNumDifferentVerbs);
 		mTense = tense;
+
+		mVerbPracticePrompts = mDatabaseHelper.getVerbPracticeSessionPrompts(mTense, mNumSentences, mNumDifferentVerbs);
 		mContext = context;
 		mCurrentVerbPracticePrompt = mVerbPracticePrompts.get(0);
 
 		switch(mTense) {
-			case TENSE_PRESENTE:
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_PRESENTE:
+				mNumWordsWithFourOrMoreSubjectsCoveredAlready = mContext.getSharedPreferences(
+						mContext.getString(R.string.listo_shared_preferences), 0).getInt(
+						PREF_NUM_WORDS_MOSTLY_COVERED_PRESENTE, 0);
+				break;
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_PRETERITO:
+				mNumWordsWithFourOrMoreSubjectsCoveredAlready = mContext.getSharedPreferences(
+						mContext.getString(R.string.listo_shared_preferences), 0).getInt(
+						PREF_NUM_WORDS_MOSTLY_COVERED_PRESENTE, 0);
+				break;
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_IMPERFECTO:
 				mNumWordsWithFourOrMoreSubjectsCoveredAlready = mContext.getSharedPreferences(
 						mContext.getString(R.string.listo_shared_preferences), 0).getInt(
 						PREF_NUM_WORDS_MOSTLY_COVERED_PRESENTE, 0);

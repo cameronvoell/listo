@@ -96,11 +96,11 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onPageSelected(int position) {
 				if (position == 2) {
+					mFab.hide();
 					Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
 					if (mViewPager.getCurrentItem() == 2 && page != null) {
 						((VerbsFragment)page).updateBackgroundColor();
 					}
-					mFab.show();
 				} else if (position == 3) {
 					mFab.hide();
 				} else if (position == 0) {
@@ -200,5 +200,13 @@ public class MainActivity extends AppCompatActivity {
 	public void reviewVerbs(View view) {
 		startActivityForResult(new Intent(getApplicationContext(), ReviewWordsActivity.class),
 				RESULT_CODE_REVIEW_SESSION);
+	}
+
+	public void searchVerbs(View view) {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + mViewPager.getCurrentItem());
+		if (mViewPager.getCurrentItem() == 2 && page != null) {
+			mFab.hide();
+			((VerbsFragment)page).searchVerbs();
+		}
 	}
 }

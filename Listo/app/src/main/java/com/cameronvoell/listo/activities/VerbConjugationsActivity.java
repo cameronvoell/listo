@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.cameronvoell.listo.R;
 import com.cameronvoell.listo.database.VerbConjugationRow;
+import com.cameronvoell.listo.views.VerbConjugationsView;
 
 /**
  * Created by cameronvoell on 1/28/17.
@@ -15,25 +16,19 @@ public class VerbConjugationsActivity extends AppCompatActivity {
 
 	public static final String VERB_CONJUGATIONS_DATA = "VERB_CONJUGATIONS_DATA";
 
-	TextView mInfinitiveTextView;
-	TextView mGerundTextView;
-	TextView mParticipleTextView;
+	VerbConjugationsView mVerbConjugationsView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_verb_conjugations);
 
-		mInfinitiveTextView = (TextView)findViewById(R.id.infinitive);
-		mGerundTextView = (TextView)findViewById(R.id.gerund);
-		mParticipleTextView = (TextView)findViewById(R.id.participle);
+		mVerbConjugationsView = (VerbConjugationsView) findViewById(R.id.verbConjugationInfo);
 
 		Intent intent = getIntent();
 		VerbConjugationRow verbConjugationData = intent.getParcelableExtra(VERB_CONJUGATIONS_DATA);
 
-		mInfinitiveTextView.setText(verbConjugationData.getInfinitivo());
-		mGerundTextView.setText(verbConjugationData.getGerund());
-		mParticipleTextView.setText(verbConjugationData.getPastParticiple());
+		mVerbConjugationsView.setVerbConjugations(verbConjugationData);
 	}
 
 }

@@ -64,8 +64,12 @@ public class VerbPromptFragment extends Fragment{
 
 	private String getTenseText(int tense) {
 		switch (tense) {
-			case VerbPracticeSession.TENSE_PRESENTE:
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_PRESENTE:
 				return "PRESENTE";
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_PRETERITO:
+				return "PRETERITO";
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_IMPERFECTO:
+				return "IMPERFECTO";
 			default:
 				return "BABOON";
 		}

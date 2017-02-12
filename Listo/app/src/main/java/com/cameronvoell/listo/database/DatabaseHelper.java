@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.cameronvoell.listo.R;
+import com.cameronvoell.listo.fragments.VerbPracticeConfiguratorFragment;
 import com.cameronvoell.listo.fragments.VocabWordListFragment;
 import com.cameronvoell.listo.model.FrequencyWord;
 import com.cameronvoell.listo.model.SavedWord;
@@ -284,6 +285,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ KEY_IMPERATIVO_6 + " TEXT, "
 			+ KEY_IMPERATIVO_7 + " TEXT, "
 			+ KEY_IMPERATIVO_8 + " TEXT " + ")";
+
+	//Frequency Database Helper Strings
+	public static final String KEY_VERB_INFINITIVO = "KEY_VERB_INFINITIVO";
+	public static final String KEY_GERUND_NUM_REVIEW = "KEY_GERUND_NUM_REVIEW";
+	public static final String KEY_GERUND_NUM_INCORRECT = "KEY_GERUND_NUM_INCORRECT";
+	public static final String KEY_PARTICIPLE_NUM_REVIEW = "KEY_GERUND_NUM_REVIEW";
+	public static final String KEY_PARTICIPLE_NUM_INCORRECT = "KEY_GERUND_NUM_INCORRECT";
+	public static final String KEY_INDICATIVE_PRESENT_NUM_REVIEW = "KEY_GERUND_NUM_REVIEW";
+	public static final String KEY_INDICATIVE_PRESENT_NUM_INCORRECT = "KEY_GERUND_NUM_INCORRECT";
+	public static final String KEY_INDICATIVE_FUTURO_NUM_REVIEW = "KEY_GERUND_NUM_REVIEW";
+	public static final String KEY_INDICATIVE_FUTURO_NUM_INCORRECT = "KEY_GERUND_NUM_INCORRECT";
+	public static final String KEY_INDICATIVE_IMPERFECTO_NUM_REVIEW = "KEY_INDICATIVE_IMPERFECTO_NUM_REVIEW";
+	public static final String KEY_INDICATIVE_IMPERFECTO_NUM_INCORRECT = "KEY_INDICATIVE_IMPERFECTO_NUM_INCORRECT";
+	public static final String KEY_INDICATIVE_PRETERITO_NUM_REVIEW = "KEY_INDICATIVE_PRETERITO_NUM_REVIEW";
+	public static final String KEY_INDICATIVE_PRETERITO_NUM_INCORRECT = "KEY_INDICATIVE_PRETERITO_NUM_INCORRECT";
+	public static final String KEY_INDICATIVE_CONDITIONAL_NUM_REVIEW = "KEY_INDICATIVE_CONDITIONAL_NUM_REVIEW";
+	public static final String KEY_INDICATIVE_CONDITIONAL_NUM_INCORRECT = "KEY_INDICATIVE_CONDITIONAL_NUM_INCORRECT";
+	public static final String KEY_SUBJUNCTIVO_PRESENT_NUM_REVIEW = "KEY_SUBJUNCTIVO_PRESENT_NUM_REVIEW";
+	public static final String KEY_SUBJUNCTIVO_PRESENT_NUM_INCORRECT = "KEY_SUBJUNCTIVO_PRESENT_NUM_INCORRECT";
+	public static final String KEY_SUBJUNCTIVO_IMPERFECTO_NUM_REVIEW = "KEY_SUBJUNCTIVO_IMPERFECTO_NUM_REVIEW";
+	public static final String KEY_SUBJUNCTIVO_IMPERFECTO_NUM_INCORRECT = "KEY_SUBJUNCTIVO_IMPERFECTO_NUM_INCORRECT";
+	public static final String KEY_SUBJUNCTIVO_FUTURO_NUM_REVIEW = "KEY_SUBJUNCTIVO_FUTURO_NUM_REVIEW";
+	public static final String KEY_SUBJUNCTIVO_FUTURO_NUM_INCORRECT = "KEY_SUBJUNCTIVO_FUTURO_NUM_INCORRECT";
+	public static final String KEY_IMPERATIVO_NUM_REVIEW = "KEY_IMPERATIVO_NUM_REVIEW";
+	public static final String KEY_IMPERATIVO_NUM_INCORRECT = "KEY_IMPERATIVO_NUM_INCORRECT";
+
+	public static final String TABLE_VERB_REVIEW_DATA = "verb_review_data";
+
+	private static final String CREATE_VERB_REVIEW_DATA_TABLE = "CREATE TABLE " + TABLE_VERB_REVIEW_DATA
+			+ "(" + KEY_ID + " INTEGER PRIMARY KEY, "
+			+ KEY_VERB_INFINITIVO + " INTEGER, "
+			+ KEY_GERUND_NUM_REVIEW + " INTEGER, "
+			+ KEY_GERUND_NUM_INCORRECT + " INTEGER, "
+			+ KEY_PARTICIPLE_NUM_REVIEW + " INTEGER, "
+			+ KEY_PARTICIPLE_NUM_INCORRECT + " INTEGER, "
+			+ KEY_INDICATIVE_PRESENT_NUM_REVIEW + " INTEGER, "
+			+ KEY_INDICATIVE_PRESENT_NUM_INCORRECT + " INTEGER, "
+			+ KEY_INDICATIVE_FUTURO_NUM_REVIEW + " INTEGER, "
+			+ KEY_INDICATIVE_FUTURO_NUM_INCORRECT + " INTEGER, "
+			+ KEY_INDICATIVE_IMPERFECTO_NUM_REVIEW + " INTEGER, "
+			+ KEY_INDICATIVE_IMPERFECTO_NUM_INCORRECT + " INTEGER, "
+			+ KEY_INDICATIVE_PRETERITO_NUM_REVIEW + " INTEGER, "
+			+ KEY_INDICATIVE_PRETERITO_NUM_INCORRECT + " INTEGER, "
+			+ KEY_INDICATIVE_CONDITIONAL_NUM_REVIEW + " INTEGER, "
+			+ KEY_INDICATIVE_CONDITIONAL_NUM_INCORRECT + " INTEGER, "
+			+ KEY_SUBJUNCTIVO_PRESENT_NUM_REVIEW + " INTEGER, "
+			+ KEY_SUBJUNCTIVO_PRESENT_NUM_INCORRECT + " INTEGER, "
+			+ KEY_SUBJUNCTIVO_IMPERFECTO_NUM_REVIEW + " INTEGER, "
+			+ KEY_SUBJUNCTIVO_IMPERFECTO_NUM_INCORRECT + " INTEGER, "
+			+ KEY_SUBJUNCTIVO_FUTURO_NUM_REVIEW + " INTEGER, "
+			+ KEY_SUBJUNCTIVO_FUTURO_NUM_INCORRECT + " INTEGER, "
+			+ KEY_SUBJUNCTIVO_PRESENT_NUM_REVIEW + " INTEGER, "
+			+ KEY_IMPERATIVO_NUM_REVIEW + " INTEGER, "
+			+ KEY_IMPERATIVO_NUM_INCORRECT + " INTEGER)";
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -936,11 +991,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		Cursor c = db.rawQuery("SELECT * FROM " + TABLE_VERB_CONJUGATIONS + where, null);
 		VerbConjugationRow verbInfo = new VerbConjugationRow(infinitive);
+		boolean found = false;
 		while (c.moveToNext()) {
+			found = true;
 			verbInfo = convertCursorToVerbRowInfo(c);
 		}
 		db.close();
-		return verbInfo;
+		return found ? verbInfo : null;
 	}
 
 	private VerbConjugationRow convertCursorToVerbRowInfo(Cursor c) {
@@ -1219,7 +1276,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private String getConjugatedVerb(String s, int subject, int mTense, VerbConjugationRow conjugations) {
 		switch (mTense) {
-			case VerbPracticeSession.TENSE_PRESENTE:
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_PRESENTE:
 				switch (subject) {
 					case VerbPracticeSession.SUBJECT_YO:
 						return conjugations.getIndicativePresentYo();
@@ -1234,6 +1291,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					case VerbPracticeSession.SUBJECT_USTEDES:
 						return conjugations.getIndicativePresentEllos();
 				}
+				break;
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_PRETERITO:
+				switch (subject) {
+					case VerbPracticeSession.SUBJECT_YO:
+						return conjugations.getIndicativePreteritoYo();
+					case VerbPracticeSession.SUBJECT_TU:
+						return conjugations.getIndicativePreteritoTu();
+					case VerbPracticeSession.SUBJECT_USTED:
+						return conjugations.getIndicativePreteritoEl();
+					case VerbPracticeSession.SUBJECT_NOSOTROS:
+						return conjugations.getIndicativePreteritoNos();
+					case VerbPracticeSession.SUBJECT_VOSOTROS:
+						return conjugations.getIndicativePreteritoVos();
+					case VerbPracticeSession.SUBJECT_USTEDES:
+						return conjugations.getIndicativePreteritoEllos();
+				}
+				break;
+			case VerbPracticeConfiguratorFragment.TENSE_OPTION_IMPERFECTO:
+				switch (subject) {
+					case VerbPracticeSession.SUBJECT_YO:
+						return conjugations.getIndicativeImperfectoYo();
+					case VerbPracticeSession.SUBJECT_TU:
+						return conjugations.getIndicativeImperfectoTu();
+					case VerbPracticeSession.SUBJECT_USTED:
+						return conjugations.getIndicativeImperfectoEl();
+					case VerbPracticeSession.SUBJECT_NOSOTROS:
+						return conjugations.getIndicativeImperfectoNos();
+					case VerbPracticeSession.SUBJECT_VOSOTROS:
+						return conjugations.getIndicativeImperfectoVos();
+					case VerbPracticeSession.SUBJECT_USTEDES:
+						return conjugations.getIndicativeImperfectoEllos();
+				}
+				break;
 		}
 		return "not found";
 	}
@@ -1242,7 +1332,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		HashSet<Integer> subjectsCovered = new HashSet<>();
 		try {
 			switch (mTense) {
-				case VerbPracticeSession.TENSE_PRESENTE:
+				case VerbPracticeConfiguratorFragment.TENSE_OPTION_PRESENTE:
 					if (conjugations.getIndicativePresentYo().contains("*"))
 						subjectsCovered.add(VerbPracticeSession.SUBJECT_YO);
 					if (conjugations.getIndicativePresentTu().contains("*"))
@@ -1254,6 +1344,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					if (conjugations.getIndicativePresentVos().contains("*"))
 						subjectsCovered.add(VerbPracticeSession.SUBJECT_VOSOTROS);
 					if (conjugations.getIndicativePresentEllos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_USTEDES);
+					break;
+				case VerbPracticeConfiguratorFragment.TENSE_OPTION_PRETERITO:
+					if (conjugations.getIndicativePreteritoYo().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_YO);
+					if (conjugations.getIndicativePreteritoTu().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_TU);
+					if (conjugations.getIndicativePreteritoEl().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_USTED);
+					if (conjugations.getIndicativePreteritoNos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_NOSOTROS);
+					if (conjugations.getIndicativePreteritoVos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_VOSOTROS);
+					if (conjugations.getIndicativePreteritoEllos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_USTEDES);
+					break;
+				case VerbPracticeConfiguratorFragment.TENSE_OPTION_IMPERFECTO:
+					if (conjugations.getIndicativeImperfectoYo().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_YO);
+					if (conjugations.getIndicativeImperfectoTu().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_TU);
+					if (conjugations.getIndicativeImperfectoEl().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_USTED);
+					if (conjugations.getIndicativeImperfectoNos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_NOSOTROS);
+					if (conjugations.getIndicativeImperfectoVos().contains("*"))
+						subjectsCovered.add(VerbPracticeSession.SUBJECT_VOSOTROS);
+					if (conjugations.getIndicativeImperfectoEllos().contains("*"))
 						subjectsCovered.add(VerbPracticeSession.SUBJECT_USTEDES);
 					break;
 			}
